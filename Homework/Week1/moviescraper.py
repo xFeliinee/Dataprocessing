@@ -25,62 +25,62 @@ def extract_movies(dom):
     - Year of release (only a number!)
     - Actors/actresses (comma separated if more than one)
     - Runtime (only a number!)
+
+    For isdigit use #61 and #80, thanks to:
+    https://stackoverflow.com/questions/26825729/extract-number-from-string-in-python
+
+    For BeautifulSoup4 documentation:
+    https://www.crummy.com/software/BeautifulSoup/bs4/doc/
+
     """
+    # Getting all the relevant content
+    contents = dom.findAll("div", {"class": "lister-item-content"})
+    movies = []
 
-    # ADD YOUR CODE HERE TO EXTRACT THE ABOVE INFORMATION ABOUT THE
-    # HIGHEST RATED MOVIES
-    # NOTE: FOR THIS EXERCISE YOU ARE ALLOWED (BUT NOT REQUIRED) TO IGNORE
-    # UNICODE CHARACTERS AND SIMPLY LEAVE THEM OUT OF THE OUTPUT.
+    # Looping over all movies
+    for content in contents:
 
-    content = dom.findAll("div", {"class": "lister-item-content"})
-    print(content)
-    for content in content:
-        #content.findAll("div")
-        # for a in content.findAll('a', href=True):
-        #     print("Found the URL:", a['href'])
+        # making a dictionary for this movie
+        dictionary = {}
 
-        # Getting the release dates
-        dates = content.findAll('span', {'class' : 'lister-item-year text-muted unbold'})
-        for date in dates:
-            releases = [date.get_text() for date in dates]
-        # print(releases)
-
-        # Getting the titles
+        # Finding the title, indexing the array and strip down to text
         searching_titles = content.find('h3')
-        titles = searching_titles.findAll('a')
-        for title in titles:
-            halp = [title.get_text() for title in titles]
-        # print(halp)
+        searching = searching_titles.findAll('a')[0]
+        title = searching.get_text()
+        dictionary.update({'title' : title})
 
-        # Getting ratings
-        ratings = content.findAll("div", {"class": "inline-block ratings-imdb-rating"})
-        for rating in ratings:
-            real_ratings = [rating.get_text() for rating in ratings]
-        # print(real_ratings)
+        # Finding the ratings and indexing the data-value/rating
+        rating = content.find("div", {"class": "inline-block ratings-imdb-rating"})
+        dictionary.update({'rating' : rating['data-value']})
 
-        # Getting the stars
-        # deze kan hij niet vinden op de een of andere manier?
-        # unbound variable
-        # stars = content.findAll('p', attrs={'class' : 'Stars'})
-        # for star in stars:
-        #     hello = [star.get_text() for star in stars]
-        # print(hello)
+        # Finding the release year, indexing the array, strip down to int
+        year = content.findAll('span', {'class' : 'lister-item-year text-muted unbold'})[0]
+        year = year.get_text()
+        year = int(''.join(filter(str.isdigit, year)))
+        dictionary.update({'year' : year})
 
-        # Getting the Runtime
-        # werkt nog niet?
-        runtime = content.findAll('span', {'class' : 'runtime'})
-        # for running in runtime:
-        #     runningtime = [runtime.get_text() for running in runtime]
-        # print (runningtime)
+        # Finding the stars and making array for actors
+        stars = content.select('a[href*="_st_"]')
+        actors = []
 
+        # Loop for every actor, strip down to text and append to array
+        for star in stars:
+            star = star.get_text()
+            actors.append(star)
 
+        # Join actors together in string and update dictionary
+        actors = ", ".join(actors)
+        dictionary.update({'actors' : actors})
 
-    # extracted_movies = []
-    # for extraction in extractions:
-    #     extracted_movies.append((titles, ratings, release_dates, actors, runtime))
-    #print(dom.title)
+        # Finding the runtime, indexing the array, strip down to int
+        runtime = content.findAll('span', {'class' : 'runtime'})[0]
+        runtime = runtime.get_text()
+        runtime = int(''.join(filter(str.isdigit, runtime)))
+        dictionary.update({'runtime' : runtime})
 
-    return [extracted_movies]   # REPLACE THIS LINE AS WELL IF APPROPRIATE
+        movies.append(dictionary)
+
+    return movies
 
 
 def save_csv(outfile, movies):
@@ -90,10 +90,9 @@ def save_csv(outfile, movies):
     writer = csv.writer(outfile)
     writer.writerow(['Title', 'Rating', 'Year', 'Actors', 'Runtime'])
 
-    # write movies to CSV
-    for titles, ratings, release_dates, actors, runtime in movies:
-        writer.writerow([titles, ratings, release_dates, actors, runtime])
-    # ADD SOME CODE OF YOURSELF HERE TO WRITE THE MOVIES TO DISK
+    # loop over all dictionaries and fill all rows in CSV file
+    for movie in movies:
+        writer.writerow([movie["title"], movie["rating"], movie["year"], movie["actors"], movie["runtime"]])
 
 
 def simple_get(url):
