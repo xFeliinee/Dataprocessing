@@ -27,7 +27,8 @@ def extract_movies(dom):
     - Runtime (only a number!)
 
     For isdigit use #61 and #80, thanks to:
-    https://stackoverflow.com/questions/26825729/extract-number-from-string-in-python
+    https://stackoverflow.com/questions/26825729/
+    extract-number-from-string-in-python
 
     For BeautifulSoup4 documentation:
     https://www.crummy.com/software/BeautifulSoup/bs4/doc/
@@ -50,11 +51,13 @@ def extract_movies(dom):
         dictionary.update({'title' : title})
 
         # Finding the ratings and indexing the data-value/rating
-        rating = content.find("div", {"class": "inline-block ratings-imdb-rating"})
+        rating = content.find("div", \
+                                {"class": "inline-block ratings-imdb-rating"})
         dictionary.update({'rating' : rating['data-value']})
 
         # Finding the release year, indexing the array, strip down to int
-        year = content.findAll('span', {'class' : 'lister-item-year text-muted unbold'})[0]
+        year = content.findAll('span', {'class' : \
+                                'lister-item-year text-muted unbold'})[0]
         year = year.get_text()
         year = int(''.join(filter(str.isdigit, year)))
         dictionary.update({'year' : year})
@@ -92,7 +95,8 @@ def save_csv(outfile, movies):
 
     # loop over all dictionaries and fill all rows in CSV file
     for movie in movies:
-        writer.writerow([movie["title"], movie["rating"], movie["year"], movie["actors"], movie["runtime"]])
+        writer.writerow([movie["title"], movie["rating"], movie["year"],
+                        movie["actors"], movie["runtime"]])
 
 
 def simple_get(url):
@@ -108,7 +112,8 @@ def simple_get(url):
             else:
                 return None
     except RequestException as e:
-        print('The following error occurred during HTTP GET request to {0} : {1}'.format(url, str(e)))
+        print('The following error occurred during HTTP GET request to \
+                {0} : {1}'.format(url, str(e)))
         return None
 
 

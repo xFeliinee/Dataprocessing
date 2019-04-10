@@ -1,7 +1,0 @@
-# testing this shit
-# To do
- extract_movies(dom)
- save_csv(outfile, movies)
-
-
-Inleveren: moviescraper.py, movies.html and movies.csv.
