@@ -2,24 +2,15 @@
 # Name: Feline Benavides
 # Student number: 11035358
 """
-This script does something :)
+This script does loads, cleans and preprocesses input.csv. It computes the
+central tendencies of the GDP data and produces a histogram of it. It also
+computes the five number summary of the Infant Mortality data and produces
+a box plot of it. At last a .json file is written.
 
 Thanks to:
 https://www.datacamp.com/community/tutorials/pandas-read-csv
 All pandas videos of https://www.youtube.com/user/DrNoureddinSadawi/videos
 pandas 0.24.2 documentation
-
-Set index shit:
-https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.set_index.html
-
-    TODO
-V Load in the CSV file?
-V (think so) Clean and preprocess the data?
-V Compute AND print the mean, median and mode of the GDP data?
-V Produce a histogram of the GDP data?
-V Compute AND print the Five Number Summary of the Infant Mortality data?
-V Produce a box plot of the Infant Mortality data?
-V Write a .json file in the correct format?
 
 """
 import pandas as pd
@@ -43,14 +34,14 @@ if __name__ == "__main__":
     GDP_mean = df["GDP ($ per capita) dollars"].mean()
     GDP_median = df["GDP ($ per capita) dollars"].median()
     GDP_mode = int(df["GDP ($ per capita) dollars"].mode())
-    print(f"For the Gross Domestic Product (GDP) per capita in dollar the mean is {GDP_mean}, the median is {GDP_median} and the mode is {GDP_mode}.")
+    # print(f"For the Gross Domestic Product (GDP) per capita in dollar the mean is {GDP_mean}, the median is {GDP_median} and the mode is {GDP_mode}.")
 
     # Produce a histogram of the GDP data
     df["GDP ($ per capita) dollars"].plot.hist()
-    plt.title('Gross Domestic Product (GDP) per capita', \
-                color = 'g', fontsize = 14)
-    plt.ylabel('Frequency', color = 'g')
-    plt.xlabel('Dollars', color = 'g')
+    plt.title("Gross Domestic Product (GDP) per capita", \
+                color = "g", fontsize = 14)
+    plt.ylabel("Frequency", color = "g")
+    plt.xlabel("Dollars", color = "g")
     # plt.show()
 
     # Compute and print the Five Number Summary of the Infant Mortality data
@@ -63,10 +54,10 @@ if __name__ == "__main__":
 
     # Produce a box plot of the Infant Mortality data
     df.boxplot(["Infant mortality (per 1000 births)"])
-    plt.title('Box plot for infant mortality', \
-                color = 'g', fontsize = 14)
-    plt.ylabel('Infant mortality', color = 'g')
-    plt.xlabel('')
+    plt.title("Infant Mortality per 1000 births", \
+                color = "g", fontsize = 14)
+    plt.ylabel("Per 1000 births", color = "g")
+    plt.xlabel("", color = "g")
     # plt.show()
 
     # Write a .json file in the correct format
