@@ -1,4 +1,4 @@
-<p><span style="font-size: 14pt;"><strong>Data processing</strong></span></p>
+<p><span style="font-size: 18pt;"><strong>Data processing</strong></span></p>
 <p>&nbsp;</p>
 <p>Op deze git pagina is mijn huiswerk voor het vak Data processing te vinden (minor programmeren, 2019).&nbsp;</p>
 <ul>
