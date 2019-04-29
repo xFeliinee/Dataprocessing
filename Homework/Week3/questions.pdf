@@ -1,6 +1,20 @@
-Answer the following questions in your own words. This assignment will only be graded pass or fail.
+* Explain the difference between the == operator and the === operator.
+De === operator wordt gebruikt als je iets wilt vergelijken wat ook in type gelijk is.
+Het is alleen gelijk als het type hetzelfde is (bool, integer of string bijvoorbeeld).
+Voorbeeld:
+3 === 3 -> true, want het getal 3 is hetzelfde als het getal 3
+3 === '3' -> false, want het getal 3 is niet hetzelfde als de string 3
 
-Explain the difference between the == operator and the === operator.
-Explain what a closure is. (Note that JavaScript programs use closures very often)
-Explain what higher order functions are.
-Explain what a query selector is and give an example line of JavaScript that uses a query selector.
+
+Bij de == operator werkt het net anders. Javascript probeert namelijk de types gelijk te maken
+en maakt van bijvoorbeeld '3' het getal 3.
+Voorbeeld:
+3 == 3 -> true want de waardes zijn hetzelfde
+3 == '3' -> true, omdat Javascript de string 3 naar een getal 3 kan converten.
+
+
+* Explain what a closure is. (Note that JavaScript programs use closures very often)
+
+* Explain what higher order functions are.
+
+* Explain what a query selector is and give an example line of JavaScript that uses a query selector.
