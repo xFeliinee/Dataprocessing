@@ -2,6 +2,7 @@
 * Name: Feline Benavides
 * Student number: 11035358
 * Purpose of this file:
+runnen: http://localhost:8080
 **/
 
 
@@ -63,7 +64,6 @@ var data_y = []
 var fileName = "KNMI_data.json";
 var txtFile = new XMLHttpRequest();
 txtFile.onreadystatechange = function() {
-    // When done, save data and draw plot?
     if (txtFile.readyState === 4 && txtFile.status == 200) {
 
         var data = JSON.parse(txtFile.responseText);
@@ -100,6 +100,16 @@ txtFile.onreadystatechange = function() {
             pixels_x.push(transformation_x(data_x[k]));
         };
         };
+
+        // Making axis labels
+        var xAxis = ["01-01-2019", "11-01-2019", "21-01-2019", "31-01-2019",
+                     "10-02-2019", "20-02-2019", "02-03-2019", "12-03-2019",
+                     "22-03-2019", "01-04-2019"];
+        var yAxis = ["-10", "-8", "-6", "-4", "-2", "0", "2", "4", "6", "8",
+                     "10"];
+
+        // print the axis (missing)
+
     }
 
 txtFile.open("GET", fileName);
