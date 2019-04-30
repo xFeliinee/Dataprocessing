@@ -9,13 +9,13 @@ var fileName = "KNMI_data.json";
 var txtFile = new XMLHttpRequest();
 txtFile.onreadystatechange = function() {
     if (txtFile.readyState === 4 && txtFile.status == 200) {
-        var data =JSON.parse(txtFile.responseText);
+        var data = JSON.parse(txtFile.responseText);
         data.forEach(function(data){
             console.log(data);
         });
     }
 }
-txtFile.open("GET", fileName);
+txtFile.open("GET", "KNMI_data.txt");
 txtFile.send();
 
 
@@ -57,7 +57,7 @@ ctx.lineWidth = 10;
 ctx.strokeRect(75, 140, 150, 110);
 
 // Door
-ctx.fillRect(130, 190, 40, 70);
+ctx.fillRect(130, 190, 40, 60);
 
 // Roof
 ctx.moveTo(50, 140);
