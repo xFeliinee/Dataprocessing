@@ -31,9 +31,10 @@ txtFile.onreadystatechange = function() {
     if (txtFile.readyState === 4 && txtFile.status == 200) {
         var data = JSON.parse(txtFile.responseText);
         console.log(Object.keys(data));
+        // hier bijvoorbeeld DrawPlot();
     }
 }
-txtFile.open("GET", "KNMI_data.txt");
+txtFile.open("GET", fileName);
 txtFile.send();
 
 
