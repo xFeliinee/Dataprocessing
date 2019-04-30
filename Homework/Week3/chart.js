@@ -17,8 +17,10 @@ txtFile.send();
 
 txtFile.forEach(function(element) {
   console.log(element);
+  console.log("hallo wereld")
 });
 
+console.log("boe")
 
 // Vaag huissie van de site
 const canvas = document.getElementById('my-house');
