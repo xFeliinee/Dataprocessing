@@ -12,7 +12,7 @@ txtFile.onreadystatechange = function() {
         var data =JSON.parse(txtFile.responseText);
         data.forEach(function(data){
             console.log(data);
-        }
+        });
     }
 }
 txtFile.open("GET", fileName);
