@@ -27,6 +27,7 @@ ctx.stroke();
 var fileName = "KNMI_data.json";
 var txtFile = new XMLHttpRequest();
 txtFile.onreadystatechange = function() {
+    // When done, save data and draw plot?
     if (txtFile.readyState === 4 && txtFile.status == 200) {
         var data = JSON.parse(txtFile.responseText);
         console.log(Object.keys(data));
