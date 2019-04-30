@@ -14,6 +14,8 @@ Voorbeeld:
 
 
 * Explain what a closure is. (Note that JavaScript programs use closures very often)
+tekst
+
 
 * Explain what higher order functions are.
 Een hogere orde functie is een functie die een functie in zich heeft, zoals
@@ -21,3 +23,6 @@ f(x) = g(h(x)).
 
 
 * Explain what a query selector is and give an example line of JavaScript that uses a query selector.
+Een query selector geeft het eerste element wat het tegenkomt in een document, wat
+matcht met hetgeen in de selector.
+https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelector
