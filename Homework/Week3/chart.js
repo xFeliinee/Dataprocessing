@@ -31,8 +31,10 @@ var txtFile = new XMLHttpRequest();
 txtFile.onreadystatechange = function() {
     // When done, save data and draw plot?
     if (txtFile.readyState === 4 && txtFile.status == 200) {
-        var data = JSON.parse(txtFile.responseText);
-        console.log(Object.keys(data));
+        var data_x = JSON.parse(txtFile.responseText);
+        console.log(Object.keys(data_x));
+        var data_y = JSON.parse(txtFile.responseText);
+        console.log(Object.values(data_y))
         // hier bijvoorbeeld DrawPlot();
     }
 }
