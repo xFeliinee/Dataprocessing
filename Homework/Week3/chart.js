@@ -15,7 +15,12 @@ txtFile.onreadystatechange = function() {
 txtFile.open("GET", fileName);
 txtFile.send();
 
+txtFile.forEach(function(element) {
+  console.log(element);
+});
 
+
+// Vaag huissie van de site
 const canvas = document.getElementById('my-house');
 const ctx = canvas.getContext('2d');
 // Set line width
