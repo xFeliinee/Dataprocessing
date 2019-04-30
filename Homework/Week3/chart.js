@@ -10,9 +10,7 @@ var txtFile = new XMLHttpRequest();
 txtFile.onreadystatechange = function() {
     if (txtFile.readyState === 4 && txtFile.status == 200) {
         var data = JSON.parse(txtFile.responseText);
-        data.forEach(function(data){
-            console.log(data);
-        });
+        console.log(Object.keys(data));
     }
 }
 txtFile.open("GET", "KNMI_data.txt");
