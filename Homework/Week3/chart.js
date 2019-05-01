@@ -16,11 +16,10 @@
 
 /**
 * This function returns a formula to transform your data coordinates
-* into screen coordinates.
+* into screen coordinates. Input for domain: [domain_min, domain_max]. Input for
+* range: [range_min, range_max].
 **/
 function createTransform(domain, range){
-	// domain is a two-element array of the data bounds [domain_min, domain_max]
-	// range is a two-element array of the screen bounds [range_min, range_max]
     var domain_min = domain[0]
     var domain_max = domain[1]
     var range_min = range[0]
@@ -47,7 +46,7 @@ txtFile.onreadystatechange = function() {
         var data = JSON.parse(txtFile.responseText);
         for (key in data){
             data_x.push(key);
-            // *0.1 omdat de data vanaf KNMI site zo gegeven werd
+            // *0.1 to correct the data
             data_y.push(data[key]["T1"]*0.1);
         };
         drawGraph(data_x, data_y);
@@ -57,13 +56,20 @@ txtFile.open("GET", fileName);
 txtFile.send();
 
 /**
-* This function draws a graph for given data
+* This function draws a graph for the given data and prints axis labels
 **/
 function drawGraph(data_x, data_y){
+
+    // Variables of the graph
+    var start_x = 50;
+    var start_y = 500;
+    var end_x = 700;
+    var end_y = 50;
+
     // Transformation y-axis, min/max to fit yAxis
     var domain_y;
     domain_y = [-10, 10];
-    range_y = [500, 50];
+    range_y = [start_y, end_y];
     transformation_y = createTransform(domain_y, range_y);
     var arrayLength_y = data_y.length;
     var pixels_y = [];
@@ -81,7 +87,7 @@ function drawGraph(data_x, data_y){
 
     // Transformation x-axis
     var domain_x = [Math.min(...dates), Math.max(...dates)];
-    var range_x = [50, 700];
+    var range_x = [start_x, start_y];
     var transformation_x = createTransform(domain_x, range_x);
     var pixels_x = [];
     for (var k = 0; k < arrayLength_x; k++){
@@ -97,12 +103,6 @@ function drawGraph(data_x, data_y){
     // Create a canvas
     var canvas = document.getElementById("chart");
     var ctx = canvas.getContext("2d");
-
-    // Variables of the graph
-    var start_x = 50;
-    var start_y = 500;
-    var end_x = 700;
-    var end_y = 50;
 
     // Header and axis titles
     ctx.font = "20px Verdana";
@@ -120,42 +120,42 @@ function drawGraph(data_x, data_y){
 
     // Draw border around graph
     ctx.beginPath();
-    ctx.strokeRect(50, 500, 650, -450);
+    ctx.strokeRect(start_x, start_y, (end_x - start_x), (end_y - start_y));
     ctx.stroke();
 
-    // y labels and y bars
-    for (i = 0; i < yAxis.length; i++){
+    // Y labels and y bars
+    for (l = 0; l < yAxis.length; l++){
         ctx.beginPath();
         ctx.font = "15px Verdana";
         ctx.fillStyle = "#000000";
         canvas.textAlign = "right";
-        ctx.fillText(yAxis[i], 20, transformation_y(yAxis[i]));
-        ctx.moveTo(start_x, transformation_y(yAxis[i]));
-        ctx.lineTo(end_x, transformation_y(yAxis[i]));
+        ctx.fillText(yAxis[l], 20, transformation_y(yAxis[l]));
+        ctx.moveTo(start_x, transformation_y(yAxis[l]));
+        ctx.lineTo(end_x, transformation_y(yAxis[l]));
         ctx.strokeStyle = "#D3D4D1";
         ctx.stroke();
     };
 
     // x labels
-    for (i = 0; i < xAxis.length; i++){
+    for (m = 0; m < xAxis.length; m++){
         ctx.beginPath();
         ctx.font = "15px Verdana"
         ctx.fillStyle = "#000000"
-        ctx.fillText(xAxis[i], 60 + i * ((end_x - start_x) / xAxis.length), 520);
+        ctx.fillText(xAxis[m], 60 + m * ((end_x - start_x)/xAxis.length), 520);
         ctx.stroke();
     };
 
-    // this functions draws a line between all screen coordinates of data
-    var rowSize = 50;
-    var xScale = (canvas.width - rowSize) / arrayLength_x;
+    // This functions draws a line between all screen coordinates of data
+    var xScale = (canvas.width - start_x) / arrayLength_x;
     function plotData(dataSet) {
         ctx.beginPath();
         ctx.moveTo(start_x, dataSet[0]);
-        for (l = 1; l < dataSet.length; l++) {
-            ctx.lineTo(start_x + l * xScale, dataSet[l]);
+        for (n= 1; n < dataSet.length; n++) {
+            ctx.lineTo(start_x + n * xScale, dataSet[n]);
         };
         ctx.strokeStyle = "#000000";
         ctx.stroke();
     };
     plotData(pixels_y);
+    console.log("hallo");
 };
