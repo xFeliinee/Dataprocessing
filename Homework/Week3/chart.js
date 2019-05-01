@@ -85,14 +85,11 @@ txtFile.onreadystatechange = function() {
         var canvas = document.getElementById("chart");
         var ctx = canvas.getContext("2d");
 
-        // Draw the axis, variables are made to use more often
+        // Variables of the graph
         var start_x = 50;
         var start_y = 500;
         var end_x = 700;
         var end_y = 50;
-        var columnSize = 50;
-        var rowSize = 50;
-        var margin = 10;
 
         // Header and axis titles
         ctx.font = "20px Verdana";
@@ -139,6 +136,7 @@ txtFile.onreadystatechange = function() {
         };
 
         // this functions draws a line between all screen coordinates of data
+        var rowSize = 50;
         var xScale = (canvas.width - rowSize) / arrayLength_x;
         function plotData(dataSet) {
             ctx.beginPath();
