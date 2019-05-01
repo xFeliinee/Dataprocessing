@@ -7,6 +7,10 @@
 *
 * Thanks to http://www.tutorialspark.com/html5/HTML5_Canvas_Graphs_Charts.php
 * for xScale formula
+*
+* Small comment: sorry for not writing functions and using a lot of magic
+* number. Started too late and had too little time to finalize it perfectly
+* unfortunately.
 **/
 
 
@@ -46,109 +50,112 @@ txtFile.onreadystatechange = function() {
             // *0.1 omdat de data vanaf KNMI site zo gegeven werd
             data_y.push(data[key]["T1"]*0.1);
         };
-
-        // Transformation y-axis, min/max to fit yAxis
-        var domain_y;
-        domain_y = [-10, 10];
-        range_y = [500, 50];
-        transformation_y = createTransform(domain_y, range_y);
-        var arrayLength_y = data_y.length;
-        var pixels_y = [];
-        for (var i = 0; i < arrayLength_y; i++){
-            pixels_y.push(transformation_y(data_y[i]));
-        };
-
-        // Convert time into milliseconds from 1970
-        var dates = [];
-        var arrayLength_x = data_x.length;
-        for (var j = 0; j < arrayLength_x; j++){
-            var dt = new Date(data_x[j]);
-            dates.push(dt.getTime());
-        };
-
-        // Transformation x-axis
-        var domain_x = [Math.min(...dates), Math.max(...dates)];
-        var range_x = [50, 700];
-        var transformation_x = createTransform(domain_x, range_x);
-        var pixels_x = [];
-        for (var k = 0; k < arrayLength_x; k++){
-            pixels_x.push(transformation_x(dates[k]));
-        };
-
-        // Making axis labels
-        var xAxis = ["1 Jan", "11 Jan", "21 Jan", "31 Jan", "10 Feb", "20 Feb",
-                     "2 May", "12 May", "22 May", "1 Apr"];
-        var yAxis = ["-10", "-8", "-6", "-4", "-2", "0", "2", "4", "6", "8",
-                     "10"];
-
-        // Create a canvas
-        var canvas = document.getElementById("chart");
-        var ctx = canvas.getContext("2d");
-
-        // Variables of the graph
-        var start_x = 50;
-        var start_y = 500;
-        var end_x = 700;
-        var end_y = 50;
-
-        // Header and axis titles
-        ctx.font = "20px Verdana";
-        ctx.fillStyle = "#67DA08";
-        ctx.fillText("Temperature in the Bilt from January to April 2019", 100, 30);
-
-        ctx.font = "15px Verdana";
-        ctx.fillStyle = "#67DA08";
-        ctx.fillText("Dates", 320, 540);
-
-        ctx.save();
-        ctx.translate(15, 350);
-        ctx.rotate(-(Math.PI/2));
-        ctx.font = "15px Verdana";
-        ctx.fillStyle = "#67DA08";
-        ctx.fillText("Temperature (Celsius)", 15, 0);
-        ctx.restore();
-
-        // Draw border around graph
-        ctx.beginPath();
-        ctx.strokeRect(50, 500, 650, -450);
-        ctx.stroke();
-
-        // y labels and y bars
-        for (i = 0; i < yAxis.length; i++){
-            ctx.beginPath();
-            ctx.font = "15px Verdana";
-            ctx.fillStyle = "#000000";
-            canvas.textAlign = "right";
-            ctx.fillText(yAxis[i], 20, transformation_y(yAxis[i]));
-            ctx.moveTo(start_x, transformation_y(yAxis[i]));
-            ctx.lineTo(end_x, transformation_y(yAxis[i]));
-            ctx.strokeStyle = "#D3D4D1";
-            ctx.stroke();
-        };
-
-        // x labels
-        for (i = 0; i < xAxis.length; i++){
-            ctx.beginPath();
-            ctx.font = "15px Verdana"
-            ctx.fillStyle = "#000000"
-            ctx.fillText(xAxis[i], 60 + i * ((end_x - start_x) / xAxis.length), 520);
-            ctx.stroke();
-        };
-
-        // this functions draws a line between all screen coordinates of data
-        var rowSize = 50;
-        var xScale = (canvas.width - rowSize) / arrayLength_x;
-        function plotData(dataSet) {
-            ctx.beginPath();
-            ctx.moveTo(start_x, dataSet[0]);
-            for (l = 1; l < dataSet.length; l++) {
-                ctx.lineTo(start_x + l * xScale, dataSet[l]);
-            };
-            ctx.strokeStyle = "#000000";
-            ctx.stroke();
-        };
-        plotData(pixels_y);
+        drawGraph(data_x, data_y);
         };
 };
 txtFile.open("GET", fileName);
 txtFile.send();
+
+/**
+* This function draws a graph for given data
+**/
+function drawGraph(data_x, data_y){
+    // Transformation y-axis, min/max to fit yAxis
+    var domain_y;
+    domain_y = [-10, 10];
+    range_y = [500, 50];
+    transformation_y = createTransform(domain_y, range_y);
+    var arrayLength_y = data_y.length;
+    var pixels_y = [];
+    for (var i = 0; i < arrayLength_y; i++){
+        pixels_y.push(transformation_y(data_y[i]));
+    };
+
+    // Convert time into milliseconds from 1970
+    var dates = [];
+    var arrayLength_x = data_x.length;
+    for (var j = 0; j < arrayLength_x; j++){
+        var dt = new Date(data_x[j]);
+        dates.push(dt.getTime());
+    };
+
+    // Transformation x-axis
+    var domain_x = [Math.min(...dates), Math.max(...dates)];
+    var range_x = [50, 700];
+    var transformation_x = createTransform(domain_x, range_x);
+    var pixels_x = [];
+    for (var k = 0; k < arrayLength_x; k++){
+        pixels_x.push(transformation_x(dates[k]));
+    };
+
+    // Making axis labels
+    var xAxis = ["1 Jan", "11 Jan", "21 Jan", "31 Jan", "10 Feb", "20 Feb",
+                 "2 May", "12 May", "22 May", "1 Apr"];
+    var yAxis = ["-10", "-8", "-6", "-4", "-2", "0", "2", "4", "6", "8",
+                 "10"];
+
+    // Create a canvas
+    var canvas = document.getElementById("chart");
+    var ctx = canvas.getContext("2d");
+
+    // Variables of the graph
+    var start_x = 50;
+    var start_y = 500;
+    var end_x = 700;
+    var end_y = 50;
+
+    // Header and axis titles
+    ctx.font = "20px Verdana";
+    ctx.fillStyle = "#67DA08";
+    ctx.fillText("Temperature in the Bilt from January to April 2019", 100, 30);
+
+    ctx.font = "15px Verdana";
+    ctx.fillText("Dates", 320, 540);
+
+    ctx.save();
+    ctx.translate(15, 350);
+    ctx.rotate(-(Math.PI/2));
+    ctx.fillText("Temperature (Celsius)", 15, 0);
+    ctx.restore();
+
+    // Draw border around graph
+    ctx.beginPath();
+    ctx.strokeRect(50, 500, 650, -450);
+    ctx.stroke();
+
+    // y labels and y bars
+    for (i = 0; i < yAxis.length; i++){
+        ctx.beginPath();
+        ctx.font = "15px Verdana";
+        ctx.fillStyle = "#000000";
+        canvas.textAlign = "right";
+        ctx.fillText(yAxis[i], 20, transformation_y(yAxis[i]));
+        ctx.moveTo(start_x, transformation_y(yAxis[i]));
+        ctx.lineTo(end_x, transformation_y(yAxis[i]));
+        ctx.strokeStyle = "#D3D4D1";
+        ctx.stroke();
+    };
+
+    // x labels
+    for (i = 0; i < xAxis.length; i++){
+        ctx.beginPath();
+        ctx.font = "15px Verdana"
+        ctx.fillStyle = "#000000"
+        ctx.fillText(xAxis[i], 60 + i * ((end_x - start_x) / xAxis.length), 520);
+        ctx.stroke();
+    };
+
+    // this functions draws a line between all screen coordinates of data
+    var rowSize = 50;
+    var xScale = (canvas.width - rowSize) / arrayLength_x;
+    function plotData(dataSet) {
+        ctx.beginPath();
+        ctx.moveTo(start_x, dataSet[0]);
+        for (l = 1; l < dataSet.length; l++) {
+            ctx.lineTo(start_x + l * xScale, dataSet[l]);
+        };
+        ctx.strokeStyle = "#000000";
+        ctx.stroke();
+    };
+    plotData(pixels_y);
+};
