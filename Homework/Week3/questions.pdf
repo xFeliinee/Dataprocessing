@@ -5,7 +5,6 @@ Voorbeeld:
 3 === 3 -> true, want het getal 3 is hetzelfde als het getal 3
 3 === '3' -> false, want het getal 3 is niet hetzelfde als de string 3
 
-
 Bij de == operator werkt het net anders. Javascript probeert namelijk de types gelijk te maken
 en maakt van bijvoorbeeld '3' het getal 3.
 Voorbeeld:
@@ -15,6 +14,11 @@ Voorbeeld:
 
 * Explain what a closure is. (Note that JavaScript programs use closures very often)
 tekst
+Met de hulp van: https://stackoverflow.com/questions/36636/what-is-a-closure
+Een closer is een functie, die een locale variabele van bijvoorbeeld een functie
+'vasthoudt', ook al is dat stuk klaar met runnen. Zo kan je die variabele ook nog
+gebruiken in andere delen van je code, die niet onder dat locale stuk vallen
+waar de variabele is aangemaakt.
 
 
 * Explain what higher order functions are.
@@ -25,4 +29,3 @@ f(x) = g(h(x)).
 * Explain what a query selector is and give an example line of JavaScript that uses a query selector.
 Een query selector geeft het eerste element wat het tegenkomt in een document, wat
 matcht met hetgeen in de selector.
-https://developer.mozilla.org/en-US/docs/Web/API/Element/querySelector
