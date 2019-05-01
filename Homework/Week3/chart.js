@@ -157,5 +157,4 @@ function drawGraph(data_x, data_y){
         ctx.stroke();
     };
     plotData(pixels_y);
-    console.log("hallo");
 };
