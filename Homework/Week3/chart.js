@@ -6,15 +6,6 @@ runnen: http://localhost:8080
 **/
 
 
-var canvas = document.getElementById("chart");
-var ctx = canvas.getContext("2d");
-ctx.moveTo(0, 400);
-ctx.lineTo(600, 0);
-ctx.stroke();
-ctx.font = "20px Arial";
-ctx.fillText("Temperatuurtjes", 10, 50);
-
-
 /**
 * Purpose of this function: geen idee
 **/
@@ -37,27 +28,6 @@ function createTransform(domain, range){
 }
 
 
-// // Vaag huissie van de site
-// const canvas = document.getElementById('chart');
-// const ctx = canvas.getContext('2d');
-// // Set line width
-// ctx.lineWidth = 5;
-//
-// // yScale = (canvas.height - columnSize - margin) / (Val_max - Val_min);
-// // xScale = (canvas.width - rowSize) / sections;
-// // Wall
-// ctx.strokeRect(75, 140, 150, 110);
-//
-// // Door
-// ctx.fillRect(130, 190, 40, 60);
-
-// // Roof
-// ctx.moveTo(50, 140);
-// ctx.lineTo(150, 60);
-// ctx.lineTo(250, 140);
-// ctx.closePath();
-// ctx.stroke();
-
 // Loading the data, snippet from minor programming
 var data_x = []
 var data_y = []
@@ -74,8 +44,9 @@ txtFile.onreadystatechange = function() {
         };
 
         // Transformation y-axis
+        var domain_y;
         domain_y = [Math.min(...data_y), Math.max(...data_y)];
-        range_y = [400, 0];
+        range_y = [500, 50];
         transformation_y = createTransform(domain_y, range_y);
         var arrayLength_y = data_y.length;
         var pixels_y = [];
@@ -93,7 +64,7 @@ txtFile.onreadystatechange = function() {
 
         // Transformation x-axis
         domain_x = [Math.min(...dates), Math.max(...dates)];
-        range_x = [0, 600];
+        range_x = [50, 700];
         transformation_x = createTransform(domain_x, range_x);
         var pixels_x = [];
         for (var k = 0; k < arrayLength_x; k++){
@@ -108,9 +79,76 @@ txtFile.onreadystatechange = function() {
         var yAxis = ["-10", "-8", "-6", "-4", "-2", "0", "2", "4", "6", "8",
                      "10"];
 
+        // sections is arrayLength_x of arrayLength_y
+        // val min is domain_x[0], domain_y[0]
+        // val max is domain_y[1], domain_y[1]
+         var stepSize_x = 10;
+         var stepSize_y = 11;
+         var columnSize = 50;
+         var rowSize = 50;
+         var margin = 10;
+
         // print the axis (missing)
 
-    }
+        // Make a canvas and title
+        var canvas = document.getElementById("chart");
+        var ctx = canvas.getContext("2d");
+        ctx.font = "20px Verdana"
+        ctx.fillStyle = "#D5FF74"
+        ctx.fillText("Temperature in the Bilt from January to April 2019", columnSize, rowSize - margin);
+
+        yScale = (canvas.height - columnSize - margin) / (domain_y[1] - domain_y[0])
+        xScale = (canvas.width - rowSize) / arrayLength_x;
+
+        // Draw the axis, variables are made to use more often
+        start_x = 50;
+        start_y = 500;
+        end_x = 700;
+        end_y = 50;
+        ctx.moveTo(start_x, start_y);
+        ctx.lineTo(end_x, start_y); //x
+        ctx.moveTo(start_x, start_y);
+        ctx.lineTo(start_x, end_y); //y
+        ctx.stroke();
+
+        // ctx.strokeStyle="#009933"; // color of grid lines
+        // ctx.beginPath();
+
+        // // loopen over je y values
+        // for (i = 0; i < arrayLength_y; i++){
+        //     ctx.moveTo(x?, pixels_y[i]);
+        //     ctx.lineTo(x?, pixels_y)
+        // }
+
+        // for (i=1;i<=xAxis.length;i++) {
+		// var x = i * xScale;
+		// ctx.fillText(xAxis[i], x, 525);
+		// ctx.moveTo(x, 525);
+		// ctx.lineTo(x, 525);
+        // };
+        //
+        // var count =  0;
+        // for (scale=domain_y[1];scale>=domain_y[0];scale = scale - 11) {
+        // var y = columnSize + (yScale * count * 11);
+        // ctx.fillText(scale, margin,y + margin);
+        // ctx.moveTo(rowSize,y)
+        // ctx.lineTo(canvas.width,y)
+        // count++;
+        // }
+        // ctx.stroke();
+        // ctx.translate(rowSize,canvas.height + domain_y[1] * yScale);
+	    // ctx.scale(1,-1 * yScale);
+
+        plotData(pixels_y);
+
+        function plotData(dataSet) {
+            ctx.moveTo(start_x, dataSet[0]);
+            for (l = 1; l < dataSet.length; l++) {
+                ctx.lineTo(start_x + l * xScale, dataSet[l]);
+            };
+            ctx.stroke();
+        };
+}
 
 txtFile.open("GET", fileName);
 txtFile.send();
