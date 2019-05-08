@@ -1,0 +1,11 @@
+/*
+* Style sheet for the tooltip as practise for future homework
+*/
+
+div {
+    line-height: 1; /* height blokje */
+    padding: 12px; /* zijkant */
+    background: rgba(0, 0, 0, 0.7); /* achtergrond tool */
+    color: #fff; /* tekst van frequentie */
+    border-radius: 5px; /* ronde hoekjes */
+}

@@ -5,12 +5,12 @@
 This script converts a csv file into a json file.
 
 To use in future projects:
-pd.read_csv can be used without index_col and with a sep as default ','
+pd.read_csv can be used with index_col and with a separater (default = ',')
 to_json can be used using index, records, values, table and columns
 
 Validation via: https://jsonlint.com/
 
-Parsing data: I set time to 2015, to only view values for that year.
+Processing the data: I set time to 2015, to only view values for that year.
 In 'Value' were two measures stored, so I choose to display "PC_PRYENRGSUPPLY"
 
 """
