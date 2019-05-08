@@ -40,24 +40,16 @@ function barGraph(dataset){
 
     // Set scales for axis
     var yScale = d3.scaleLinear()
-                    .domain([0, d3.max(dataset, function(d) {
-
-                        return d.Value;
-                    })])
+                    .domain([0, 100])
+                    // .range([h + margin.top, 0])
                     .range([h, 0]);
     xList = [];
     for (key in dataset) {
         xList.push(dataset[key]["LOCATION"]);
     }
-    var xOrdinal = d3.scaleOrdinal()
+    var xOrdinal = d3.scaleBand()
                       .domain(xList)
                       .range([0, w]);
-
-    var xScale = d3.scaleLinear()
-                    .domain([0, d3.max(dataset, function(d) {
-                      return d.LOCATION
-                    })])
-                    .range([0, w]);
 
 
     // Draw the axis
@@ -70,10 +62,7 @@ function barGraph(dataset){
     bars.append("g")
         .attr("class", "xAxis")
         .attr("transform", "translate(" + margin.left + "," + (h + margin.top) + ")")
-        .style("fill", function(d) {
-            return xOrdinal(d);
-        })
-        .call(d3.axisBottom(xScale));
+        .call(d3.axisBottom(xOrdinal));
 
 
     // Set titles to axis
@@ -83,19 +72,29 @@ function barGraph(dataset){
         .attr("transform", "rotate(-90)")
         .attr("text-anchor", "middle")
         .style("font-size", "20px")
-        .text("Dit is een y asje!");
+        .text("% of primary energy supply");
     bars.append("text")
         .attr("x", w / 2)
-        .attr("y", h + margin.top + ((2/3) * margin.bottom))
+        .attr("y", h + margin.top + ((4/5) * margin.bottom))
         .attr("text-anchor", "middle")
         .style("font-size", "20px")
-        .text("Dit is een x asje!");
+        .text("Countries");
     bars.append("text")
         .attr("x", w / 2)
         .attr("y", margin.top / 3)
         .attr("text-anchor", "middle")
         .style("font-size", "35px")
-        .text("Dit is een titeltje!");
+        .text("Primary energy supply of countries all over the world");
+
+
+    // Getting the tip
+    var tip = d3.tip()
+                .attr("class", "d3Tip")
+                .offset([-10, 0])
+                .html(function(d) {
+                    return "<b>Frequency:</b> <span style='color:orange'>" + d.Value + "</span>";
+                 });
+    bars.call(tip);
 
 
     // Creating bars
@@ -107,11 +106,21 @@ function barGraph(dataset){
             return i * (barWidth + barPadding) + margin.left;
         })
         .attr("y", function(d) {
-            return h - d.Value * 50 + margin.top;
+            return yScale(d.Value) + margin.top
         })
         .attr("height", function(d){
-            return d.Value * 50;
+            return h - yScale(d.Value)
         })
         .attr("width", barWidth)
-        .attr("fill", "#67DA08");
+        .attr("fill", "#67DA08")
+        .on("mouseover", tip.show)
+        .on("mouseenter", function(d){
+            d3.select(this)
+            .attr("fill", "orange")
+        })
+        .on("mouseleave", tip.hide)
+        .on("mouseout", function(d){
+            d3.select(this)
+            .attr("fill", "#67DA08")
+        });
 };
