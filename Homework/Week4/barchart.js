@@ -67,7 +67,7 @@ function barGraph(dataset){
         .attr("text-anchor", "middle")
         .style("font-size", "20px")
         .text("Countries");
-        
+
     bars.append("text")
         .attr("x", w / 2 + margin.left)
         .attr("y", margin.top / 3)
@@ -109,6 +109,6 @@ function barGraph(dataset){
         .on("mouseleave", tip.hide)
         .on("mouseout", function(d){
             d3.select(this)
-            .attr("fill", "#67DA08")
+                .attr("fill", "#67DA08")
         });
 };

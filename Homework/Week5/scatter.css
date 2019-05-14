@@ -4,6 +4,15 @@ Student number: 11035358
 This file ....
 */
 
+/* Tooltip */
+div {
+    line-height: 1; /* height blokje */
+    padding: 12px; /* zijkant */
+    background: rgba(0, 0, 0, 0.7); /* achtergrond tool */
+    color: #fff; /* tekst van land */
+    border-radius: 5px; /* ronde hoekjes */
+}
+
 /* Dropdown Button */
 .dropbtn {
   background-color: #3498DB;

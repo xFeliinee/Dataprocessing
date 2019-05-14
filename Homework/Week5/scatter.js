@@ -40,11 +40,7 @@ window.onload = function() {
         var cleanTeenViolent = transformResponse(response[0])
         var cleanTeenPregnancies = transformResponse(response[1])
         var cleanGDP = transformResponse2(response[2])
-        // console.log(cleanGDP);
-        // console.log(Math.max(cleanGDP));
-        // // console.log(dlist[0].value[0].Year);
-        // console.log(cleanTeenViolent);
-        // console.log(cleanTeenPregnancies);
+        console.log(cleanTeenPregnancies);
         scatterPlot(cleanGDP, cleanTeenViolent, cleanTeenPregnancies)
     }).catch(function(e){
         throw(e);
@@ -55,17 +51,19 @@ window.onload = function() {
     */
     function scatterPlot(xValues, yValues, zValues){
         // Define height and width
-        var margin = {top: 50, right: 20, bottom: 50, left: 50};
-        var w = 700 - margin.left - margin.right;
-        var h = 600 - margin.top - margin.bottom;
+        var margin = {top: 50, right: 200, bottom: 50, left: 50};
+        let w = 1000;
+        let h = 700;
+        let plotWidth = 1000 - margin.left - margin.right;
+        let plotHeight = 700 - margin.bottom - margin.top;
 
         // Getting DOM element for chart
         var scatter = d3.select("svg")
 
         let y = 2012;
         ykeys = Object.keys(yValues);
-        let ymin = xmin = Infinity;
-        let ymax = xmax = -Infinity;
+        let ymin = xmin = zmin = Infinity;
+        let ymax = xmax = zmax = -Infinity;
         for (var i = 0; i < ykeys.length; i++) {
             for (var j = 0; j < yValues[ykeys[i]].length; j++) {
                 try {
@@ -94,17 +92,43 @@ window.onload = function() {
         };
 
 
+        // making an ordinal scale
+        for (var i = 0; i < ykeys.length; i++) {
+            for (var j = 0; j < yValues[ykeys[i]].length; j++) {
+                try {
+                  zValues[ykeys[i]][j].Datapoint;
+                }
+                catch(error) {
+                  continue;
+                }
+                if (zValues[ykeys[i]][j].Datapoint == false) {
+                    continue;
+                } else {
+                    if (zValues[ykeys[i]][j].Datapoint > zmax) {
+                        zmax = zValues[ykeys[i]][j].Datapoint;
+                    }
+                    if (zValues[ykeys[i]][j].Datapoint < zmin) {
+                        zmin = zValues[ykeys[i]][j].Datapoint;
+                    }
+                }
+            }
+        };
+        var zScale = d3.scaleOrdinal()
+                        .domain([zmin, zmax])
+                        .range(["#ffeda0", "#feb24c", "#f03b20"]);
+
+
         // Set scales for axis
         var yScale = d3.scaleLinear()
                         .domain([ymin, ymax])
-                        .range([h, 0]);
+                        .range([plotHeight, 0]);
 
         var xScale = d3.scaleLinear()
                         .domain([xmin, xmax])
-                        .range([0, w]);
+                        .range([0, plotWidth]);
 
-        scatter.attr("width", w + margin.left + margin.right)
-                .attr("height", h + margin.top + margin.bottom)
+        scatter.attr("width", w)
+                .attr("height", h)
                 .append("g")
                 .attr("class", "yAxis")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
@@ -113,13 +137,13 @@ window.onload = function() {
         scatter.append("g")
                 .attr("class", "xAxis")
                 .attr("transform", "translate(" + margin.left + "," +
-                                    (h + margin.top) + ")")
+                                    (plotHeight + margin.top) + ")")
                 .call(d3.axisBottom(xScale));
 
 
         // Set titles to axis
         scatter.append("text")
-                .attr("x", ((h / 2) + margin.top)*-1)
+                .attr("x", ((plotHeight / 2) + margin.top)*-1)
                 .attr("y", margin.left / 3)
                 .attr("transform", "rotate(-90)")
                 .attr("text-anchor", "middle")
@@ -127,18 +151,29 @@ window.onload = function() {
                 .text("Number of teens in a violent area");
 
         scatter.append("text")
-                .attr("x", w / 2 + margin.left)
-                .attr("y", h + margin.top + ((4/5) * margin.bottom))
+                .attr("x", plotWidth / 2 + margin.left)
+                .attr("y", plotHeight + margin.top + ((4/5) * margin.bottom))
                 .attr("text-anchor", "middle")
                 .style("font-size", "20px")
                 .text("GDP");
 
         scatter.append("text")
-                .attr("x", w / 2 + margin.left)
+                .attr("x", plotWidth / 2 + margin.left)
                 .attr("y", margin.top / 3)
                 .attr("text-anchor", "middle")
                 .style("font-size", "20px")
                 .text("Grote titel");
+
+
+        // Getting the tip
+        var tip = d3.tip()
+                    .attr("class", "d3Tip")
+                    .offset([-10, 0])
+                    .html(function(d) {
+                        return "<b>Country:</b> <span style='color:orange'>" +
+                                yValues[d][0].Country + "</span>";
+                     });
+        scatter.call(tip);
 
 
         // Creating dots
@@ -146,33 +181,62 @@ window.onload = function() {
                 .data(ykeys)
                 .enter()
                 .append("circle")
-                .attr("cx", function(d) {
-                    // console.log("checkcheck");
-                    if (xValues[d]) {
-                        xValues[d].forEach(function(e) {
-                            if (e.Year == y){
-                                // console.log("Hier gekomen1.0");
-                                // console.log(e.Datapoint);
-                                console.log((xScale(e.Datapoint)) + margin.left);
-                                return (xScale(e.Datapoint)) + margin.left
-                            }
-                        })
-                    }
+                .attr("cx", function(d, i){
+                    return i*50
+                }) //function(d) {
+                //     if (xValues[d]) {
+                //         xValues[d].forEach(function(e) {
+                //             if (e.Year == y){
+                //                 // console.log((xScale(e.Datapoint)) + margin.left);
+                //                 return (xScale(e.Datapoint)) + margin.left
+                //             }
+                //         })
+                //     }
+                // })
+                .attr("cy", function(d, i){
+                    return i*50
                 })
-                .attr("cy", function(d) {
-                    if (yValues[d]) {
-                        yValues[d].forEach(function(e) {
-                            if (e.Time == y) {
-                                console.log((yScale(e.Datapoint)) + margin.top);
-                                return h - (yScale(e.Datapoint)) + margin.top
-                            }
-                        })
-                    }
-                })
+                //function(d) {
+                //     if (yValues[d]) {
+                //         yValues[d].forEach(function(e) {
+                //             if (e.Time == y) {
+                //                 // console.log((yScale(e.Datapoint)) + margin.top);
+                //                 return h - (yScale(e.Datapoint)) + margin.top
+                //             }
+                //         })
+                //     }
+                // })
                 .attr("r", 5)
-                .attr("fill", "green");
-            // step 3: add color
-            // http://colorbrewer2.org/#type=sequential&scheme=BuGn&n=3
+                .attr("fill", function(d) {
+                    return zScale(d)
+                })
+                .on("mouseover", tip.show)
+                .on("mouseenter", function(d){
+                    d3.select(this)
+                    .attr("fill", "black")
+                })
+                .on("mouseleave", tip.hide)
+                .on("mouseout", function(d){
+                    d3.select(this)
+                        .attr("fill", function(d) {
+                            return zScale(d)
+                        })
+                });
+
+        // scatter.selectAll("legend")
+        //         .data(1)
+        //         .enter()
+        //         .append("legend")
+        //         .attr("x", h - margin.right)
+        //         .attr("y", margin.top)
+        //         .attr("height", plotHeight)
+        //         .attr("width", margin.right - 100)
+        //         .attr("stroke", "black")
+        //         .attr("fill", "white")
+        //         .attr("rx", 10)
+        //         .attr("ry", 10)
+        //         .append("text")
+        //                 .text("Legandary");
     };
 
   console.log('Kakzooi')
