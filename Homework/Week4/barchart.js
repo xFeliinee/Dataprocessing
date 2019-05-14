@@ -60,12 +60,14 @@ function barGraph(dataset){
         .attr("text-anchor", "middle")
         .style("font-size", "20px")
         .text("% of primary energy supply");
+
     bars.append("text")
         .attr("x", w / 2 + margin.left)
         .attr("y", h + margin.top + ((4/5) * margin.bottom))
         .attr("text-anchor", "middle")
         .style("font-size", "20px")
         .text("Countries");
+        
     bars.append("text")
         .attr("x", w / 2 + margin.left)
         .attr("y", margin.top / 3)
@@ -78,7 +80,7 @@ function barGraph(dataset){
                 .attr("class", "d3Tip")
                 .offset([-10, 0])
                 .html(function(d) {
-                    return "<b>Frequency:</b> <span style='color:orange'>" +
+                    return "<b>Percentage:</b> <span style='color:orange'>" +
                             d.Value + "</span>";
                  });
     bars.call(tip);

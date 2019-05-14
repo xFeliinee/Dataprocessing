@@ -42,8 +42,6 @@ window.onload = function() {
         var cleanGDP = transformResponse2(response[2])
         // console.log(cleanGDP);
         // console.log(Math.max(cleanGDP));
-
-
         // // console.log(dlist[0].value[0].Year);
         // console.log(cleanTeenViolent);
         // console.log(cleanTeenPregnancies);
@@ -57,55 +55,51 @@ window.onload = function() {
     */
     function scatterPlot(xValues, yValues, zValues){
         // Define height and width
-        var margin = {top: 100, right: 0, bottom: 50, left: 50};
-        var w = 700 - margin.left;
+        var margin = {top: 50, right: 20, bottom: 50, left: 50};
+        var w = 700 - margin.left - margin.right;
         var h = 600 - margin.top - margin.bottom;
 
         // Getting DOM element for chart
         var scatter = d3.select("svg")
-
 
         let y = 2012;
         ykeys = Object.keys(yValues);
         let ymin = xmin = Infinity;
         let ymax = xmax = -Infinity;
         for (var i = 0; i < ykeys.length; i++) {
-            for (var j = 0; j < ykeys.length; j++) {
-                console.log(yValues[ykeys[i]][j].Datapoint);
-                if (yValues[ykeys[i]][j].Datapoint = false) {
-                    continue
+            for (var j = 0; j < yValues[ykeys[i]].length; j++) {
+                try {
+                  xValues[ykeys[i]][j].Datapoint;
                 }
-                if (yValues[ykeys[i]][j].Datapoint > ymax) {
-                    max = yValues[ykeys[i]][j].Datapoint
-                    console.log(max);
+                catch(error) {
+                  continue;
                 }
-                if (yValues[ykeys[i]][j].Datapoint < ymin) {
-                    min = yValues[ykeys[i]][j].Datapoint
-                    console.log(min);
+                if (yValues[ykeys[i]][j].Datapoint == false || xValues[ykeys[i]][j].Datapoint == false) {
+                    continue;
+                } else {
+                    if (yValues[ykeys[i]][j].Datapoint > ymax) {
+                        ymax = yValues[ykeys[i]][j].Datapoint;
+                    }
+                    if (yValues[ykeys[i]][j].Datapoint < ymin) {
+                        ymin = yValues[ykeys[i]][j].Datapoint;
+                    }
+                    if (xValues[ykeys[i]][j].Datapoint > xmax) {
+                        xmax = xValues[ykeys[i]][j].Datapoint
+                    }
+                    if (xValues[ykeys[i]][j].Datapoint < xmin) {
+                        xmin = xValues[ykeys[i]][j].Datapoint
+                    }
                 }
             }
-        }
+        };
 
-        for (var i = 0; i < ykeys.length; i++) {
-            for (var j = 0; j < ykeys.length; j++) {
-                console.log(xValues[ykeys[i]][j].Datapoint);
-                if (xValues[ykeys[i]][j].Datapoint > xmax) {
-                    max = xValues[ykeys[i]][j].Datapoint
-                    console.log(max);
-                }
-                if (xValues[ykeys[i]][j].Datapoint < xmin) {
-                    min = xValues[ykeys[i]][j].Datapoint
-                    console.log/(min);
-                }
-            }
-        }
 
         // Set scales for axis
-        var yScale = d3.Scalelinear()
+        var yScale = d3.scaleLinear()
                         .domain([ymin, ymax])
                         .range([h, 0]);
 
-        var xScale = d3.Scalelinear()
+        var xScale = d3.scaleLinear()
                         .domain([xmin, xmax])
                         .range([0, w]);
 
@@ -115,11 +109,13 @@ window.onload = function() {
                 .attr("class", "yAxis")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
                 .call(d3.axisLeft(yScale));
+
         scatter.append("g")
                 .attr("class", "xAxis")
                 .attr("transform", "translate(" + margin.left + "," +
                                     (h + margin.top) + ")")
                 .call(d3.axisBottom(xScale));
+
 
         // Set titles to axis
         scatter.append("text")
@@ -128,13 +124,15 @@ window.onload = function() {
                 .attr("transform", "rotate(-90)")
                 .attr("text-anchor", "middle")
                 .style("font-size", "20px")
-                .text("y titel");
+                .text("Number of teens in a violent area");
+
         scatter.append("text")
                 .attr("x", w / 2 + margin.left)
                 .attr("y", h + margin.top + ((4/5) * margin.bottom))
                 .attr("text-anchor", "middle")
                 .style("font-size", "20px")
-                .text("x titel");
+                .text("GDP");
+
         scatter.append("text")
                 .attr("x", w / 2 + margin.left)
                 .attr("y", margin.top / 3)
@@ -142,33 +140,37 @@ window.onload = function() {
                 .style("font-size", "20px")
                 .text("Grote titel");
 
+
         // Creating dots
         scatter.selectAll("circle")
-                .data(Object.keys(yValues))
+                .data(ykeys)
                 .enter()
                 .append("circle")
                 .attr("cx", function(d) {
-                    xValues[d].forEach(function(e){
-                        if (e.Year == y){
-                            console.log(e.Datapoint);
-                            return xScale(e.Datapoint)
-                        }
-                    })
-                    // console.log(d);
-                    // console.log(xValues[d]);
-                    // console.log(yValues[d]);
-                    //  return d[0];
+                    // console.log("checkcheck");
+                    if (xValues[d]) {
+                        xValues[d].forEach(function(e) {
+                            if (e.Year == y){
+                                // console.log("Hier gekomen1.0");
+                                // console.log(e.Datapoint);
+                                console.log((xScale(e.Datapoint)) + margin.left);
+                                return (xScale(e.Datapoint)) + margin.left
+                            }
+                        })
+                    }
                 })
                 .attr("cy", function(d) {
-                    yValues[d].forEach(function(e){
-                        if (e.Year == y){
-                            console.log(e.Datapoint);
-                            return yScale(e.Datapoint)
-                        }
-                    })
-                     // return d[1];
+                    if (yValues[d]) {
+                        yValues[d].forEach(function(e) {
+                            if (e.Time == y) {
+                                console.log((yScale(e.Datapoint)) + margin.top);
+                                return h - (yScale(e.Datapoint)) + margin.top
+                            }
+                        })
+                    }
                 })
-                .attr("r", 5);
+                .attr("r", 5)
+                .attr("fill", "green");
             // step 3: add color
             // http://colorbrewer2.org/#type=sequential&scheme=BuGn&n=3
     };
