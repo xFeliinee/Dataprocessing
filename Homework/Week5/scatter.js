@@ -206,20 +206,43 @@ function scatterPlot(data, year){
                     });
             });
 
+    // creating a legend
+    var colorData = [[(1/4 * zmax), '#ffffb2'], [(2/4 * zmax), '#fecc5c'], [(3/4 * zmax), '#fd8d3c'], [zmax, '#e31a1c']];
+    var padding = 20;
+    var legend = scatter.selectAll(".legend")
+                        .data(colorData)
+                        .enter()
+                        .append("g")
+                        .attr("class", "legend")
 
-// // creating a legend
-//     var legend = scatter.append("g")
-//                         .attr("class","legend")
-//
-//     legend.append("border")
-//             .attr("x", w - margin.right)
-//             .attr("y", margin.top)
-//             .attr("width", 150)
-//             .attr("height", 200)
-//             .attr("stroke", "orange")
-//             .attr("fill", "white")
-//             .attr("rx", 10)
-//             .attr("ry", 10);
+    legend.append("rect")
+            .attr("x", w + padding - margin.right)
+            .attr("y", function(d, i) {
+                return margin.top + padding + (40 * i)
+            })
+            .attr("width", padding)
+            .attr("height", padding)
+            .attr("stroke", "grey")
+            .style("fill", function(d){
+                return d[1]
+            })
+            .attr("rx", 2)
+            .attr("ry", 2);
+
+    legend.append("text")
+            .attr("x", w + padding - margin.right + 25)
+            .attr("y", function(d, i) {
+                return margin.top + padding + 15 + (40 * i)
+            })
+            .text(function(d) {
+                return Math.round(d[0] * 10 ) / 10
+            });
+
+    legend.append("text")
+            .attr("x", w + padding - margin.right)
+            .attr("y", margin.top)
+            .style("font-size", "18px")
+            .text("Teen pregancy (%)*");
 };
 
 

@@ -2,6 +2,7 @@
 Name: Feline Benavides
 Student number: 11035358
 This file shows a scatterplot imported from an external Javascript script.
+It also holds a dropdown menu to shift between datasets.
  -->
 
 <!DOCTYPE html>
@@ -25,12 +26,14 @@ This file shows a scatterplot imported from an external Javascript script.
               <a id = "2015">2015</a>
           </div>
         </div>
-        <br>
+        <br><br>
         <svg width="1000" height="600"></svg>
         <script src="scatter.js"></script>
         <p>A scatterplot with percentage teens in violent areas again GDP is
             plotted. Also percentage of teen pregnancies is plotted by color.
             You can select multiple years to see a shift in the data.</p>
+        <p>* If a value from the data Teen Pregnancy (%) is below the value
+            next to the color in the legend, it will be given that color</p>
         <p>Source&#58; <a href="http://www.oecd.org/">OECD</a></p>
     </body>
 </html>
