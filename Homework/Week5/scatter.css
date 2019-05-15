@@ -1,8 +1,9 @@
-/*
-Name: Feline Benavides
-Student number: 11035358
-This file ....
-*/
+/**
+ * Name: Feline Benavides
+ * Student number: 11035358
+ * This file holds all style changes for the tooltips and dropdown menu.
+ * All style changes for the dropdown menu are from W3 schools (see README)
+**/
 
 /* Tooltip */
 div.d3Tip {
@@ -55,5 +56,6 @@ div.d3Tip {
 /* Change color of dropdown links on hover */
 .dropdown-content a:hover {background-color: #ddd}
 
-/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+/* Show the dropdown menu (use JS to add this class to the .dropdown-content
+ * container when the user clicks on the dropdown button) */
 .show {display:block;}

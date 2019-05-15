@@ -1,8 +1,7 @@
 /**
-* Name: Feline Benavides
-* Student number: 11035358
-* This files makes scatterplot with given data for selected year
-*
+ * Name: Feline Benavides
+ * Student number: 11035358
+ * This files makes scatterplot with given data for selected year
 **/
 
 
@@ -14,7 +13,6 @@ window.onload = function() {
 
     // snippet from minor
     var requests = [d3.json(teensInViolentArea), d3.json(teenPregnancies), d3.json(GDP)];
-
     Promise.all(requests).then(function(response) {
         var dataSet = loadData(response)
         scatterPlot(dataSet, 2012)
@@ -40,7 +38,9 @@ window.onload = function() {
 };
 
 
-/* This function cleans the given data */
+/**
+ * This function cleans and loads the given data
+ **/
 function loadData(response) {
     var cleanTeenViolent = transformResponse(response[0])
     var cleanTeenPregnancies = transformResponse(response[1])
@@ -87,9 +87,9 @@ function loadData(response) {
 };
 
 
-/*
-* This function creates a scatterplot for given data
-*/
+/**
+ * This function creates a scatterplot for given data
+**/
 function scatterPlot(data, year){
     // Define margins, height and width
     var margin = {top: 50, right: 200, bottom: 50, left: 50};
@@ -110,7 +110,7 @@ function scatterPlot(data, year){
         if (d.teenPregnancies > zmax) {
             zmax = d.teenPregnancies
         }
-    })
+    });
 
     // Set scales for axis
     var yScale = d3.scaleLinear()
@@ -163,7 +163,7 @@ function scatterPlot(data, year){
             .attr("y", margin.top / 2)
             .attr("text-anchor", "middle")
             .style("font-size", "25px")
-            .text("Scatterplot of teens in violent areas vs GDP");
+            .text("Percentage of teens in violent areas against GDP in " + y);
 
     // Getting the tip
     var tip = d3.tip()
@@ -224,6 +224,7 @@ function scatterPlot(data, year){
 
 
 /********
+ * From minor programming
  * Transforms response of OECD request for teen pregancy rates.
  * https://stats.oecd.org/SDMX-JSON/data/CWB/AUS+AUT+BEL+BEL-VLG+CAN+CHL+CZE+DNK+EST+FIN+FRA+DEU+GRC+HUN+ISL+IRL+ISR+ITA+JPN+KOR+LVA+LTU+LUX+MEX+NLD+NZL+NOR+POL+PRT+SVK+SVN+ESP+SWE+CHE+TUR+GBR+USA+OAVG+NMEC+BRA+BGR+CHN+COL+CRI+HRV+CYP+IND+IDN+MLT+PER+ROU+RUS+ZAF.CWB46/all?startTime=1960&endTime=2017
  *
@@ -301,6 +302,7 @@ function transformResponse(data){
 
 
 /********
+ * From minor programming
  * Transforms response of OECD request for GDP.
  * https://stats.oecd.org/SDMX-JSON/data/SNA_TABLE1/AUS+AUT+BEL+CAN+CHL+CZE+DNK+EST+FIN+FRA+DEU+GRC+HUN+ISL+IRL+ISR+ITA+JPN+KOR+LVA+LTU+LUX+MEX+NLD+NZL+NOR+POL+PRT+SVK+SVN+ESP+SWE+CHE+TUR+GBR+USA+EU28+EU15+OECDE+OECD+OTF+NMEC+ARG+BRA+BGR+CHN+COL+CRI+HRV+CYP+IND+IDN+MLT+ROU+RUS+SAU+ZAF+FRME+DEW.B1_GE.HCPC/all?startTime=2012&endTime=2018&dimensionAtObservation=allDimensions
  **/
@@ -372,8 +374,10 @@ function transformResponse2(data){
 };
 
 
-/* When the user clicks on the button,
-toggle between hiding and showing the dropdown content */
+/**
+ * When the user clicks on the button, toggle between hiding and showing
+ * the dropdown content. From W3school (see README.md)
+**/
 function myFunction() {
   document.getElementById("myDropdown").classList.toggle("show");
 }
