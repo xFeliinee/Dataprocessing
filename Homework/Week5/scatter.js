@@ -12,7 +12,8 @@ window.onload = function() {
     var GDP = "https://stats.oecd.org/SDMX-JSON/data/SNA_TABLE1/AUS+AUT+BEL+CAN+CHL+CZE+DNK+EST+FIN+FRA+DEU+GRC+HUN+ISL+IRL+ISR+ITA+JPN+KOR+LVA+LTU+LUX+MEX+NLD+NZL+NOR+POL+PRT+SVK+SVN+ESP+SWE+CHE+TUR+GBR+USA+EU28+EU15+OECDE+OECD+OTF+NMEC+ARG+BRA+BGR+CHN+COL+CRI+HRV+CYP+IND+IDN+MLT+ROU+RUS+SAU+ZAF+FRME+DEW.B1_GE.HCPC/all?startTime=2012&endTime=2018&dimensionAtObservation=allDimensions"
 
     // snippet from minor
-    var requests = [d3.json(teensInViolentArea), d3.json(teenPregnancies), d3.json(GDP)];
+    var requests = [d3.json(teensInViolentArea), d3.json(teenPregnancies),
+                    d3.json(GDP)];
     Promise.all(requests).then(function(response) {
         var dataSet = loadData(response)
         scatterPlot(dataSet, 2012)
@@ -95,8 +96,8 @@ function scatterPlot(data, year){
     var margin = {top: 50, right: 200, bottom: 50, left: 50};
     var w = 1000;
     var h = 700;
-    var plotWidth = 1000 - margin.left - margin.right;
-    var plotHeight = 700 - margin.bottom - margin.top;
+    var plotWidth = w - margin.left - margin.right;
+    var plotHeight = h - margin.bottom - margin.top;
 
     var y = year;
     var ymax = xmax = zmax = -Infinity;
@@ -133,7 +134,8 @@ function scatterPlot(data, year){
             .attr("height", h)
             .append("g")
             .attr("class", "yAxis")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+            .attr("transform", "translate(" + margin.left + "," + margin.top +
+                  ")")
             .call(d3.axisLeft(yScale));
 
     scatter.append("g")
@@ -189,7 +191,8 @@ function scatterPlot(data, year){
             .attr("cy", function(d) {
                 return yScale(d.teenViolent) + margin.top
             })
-            .attr("r", 5)
+            .attr("r", 10)
+            .attr("stroke", "grey")
             .attr("fill", function(d) {
                 return zScale(d.teenPregnancies)
             })
@@ -207,7 +210,8 @@ function scatterPlot(data, year){
             });
 
     // creating a legend
-    var colorData = [[(1/4 * zmax), '#ffffb2'], [(2/4 * zmax), '#fecc5c'], [(3/4 * zmax), '#fd8d3c'], [zmax, '#e31a1c']];
+    var colorData = [[(1/4 * zmax), '#ffffb2'], [(2/4 * zmax), '#fecc5c'],
+                     [(3/4 * zmax), '#fd8d3c'], [zmax, '#e31a1c']];
     var padding = 20;
     var legend = scatter.selectAll(".legend")
                         .data(colorData)

@@ -7,11 +7,11 @@
 
 /* Tooltip */
 div.d3Tip {
-    line-height: 1; /* height blokje */
-    padding: 12px; /* zijkant */
-    background: rgba(0, 0, 0, 0.7); /* achtergrond tool */
-    color: #fff; /* tekst van land */
-    border-radius: 5px; /* ronde hoekjes */
+    line-height: 1.5;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    border-radius: 5px;
 }
 
 /* Dropdown Button */
@@ -26,7 +26,7 @@ div.d3Tip {
 
 /* Dropdown button on hover & focus */
 .dropbtn:hover, .dropbtn:focus {
-  background-color: #67DA08;
+  background-color: #67D000;
 }
 
 /* The container <div> - needed to position the dropdown content */
@@ -56,6 +56,5 @@ div.d3Tip {
 /* Change color of dropdown links on hover */
 .dropdown-content a:hover {background-color: #ddd}
 
-/* Show the dropdown menu (use JS to add this class to the .dropdown-content
- * container when the user clicks on the dropdown button) */
+/* Show the dropdown menu */
 .show {display:block;}
