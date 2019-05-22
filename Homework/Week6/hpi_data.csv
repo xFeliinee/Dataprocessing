@@ -1,7 +1,4 @@
-HPI Rank;Country;Region;"Average Life 
-Expectancy";"Average Wellbeing
-(0-10)";Happy Life Years;"Footprint
-(gha/capita)";Inequality of Outcomes;Inequality-adjusted Life Expectancy;Inequality-adjusted Wellbeing;Happy Planet Index;GDP;Population;GINI index
+HPIRank;Country;Region;"Average Life Expectancy";"Average Wellbeing (0-10)";Happy Life Years;"Footprint (gha/capita)";Inequality of Outcomes;Inequality-adjusted Life Expectancy;Inequality-adjusted Wellbeing;Happy Planet Index;GDP;Population;GINI index
 110;Afghanistan;Middle East and North Africa;59.7;3.8;12.4;0.8;43%;38.3;3.4;20.2; $691 ;29,726,803;Data unavailable
 13;Albania;Post-communist;77.3;5.5;34.4;2.2;17%;69.7;5.1;36.8; $4,247 ;2,900,489;29
 30;Algeria;Middle East and North Africa;74.3;5.6;30.5;2.1;24%;60.5;5.2;33.3; $5,584 ;37,439,427;Data unavailable

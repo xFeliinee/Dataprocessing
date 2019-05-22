@@ -18,6 +18,5 @@ import json
 import pandas as pd
 
 if __name__ == "__main__":
-    df = pd.read_csv("hpi_data.csv", sep = ";", na_values = "Data unavailable", skipinitialspace = True)
-    
+    df = pd.read_csv("hpi_data.csv", sep = ";", na_values = "Data unavailable", skipinitialspace = True, index_col = "Country")
     df.to_json("HPI_data.json", orient = "index")
