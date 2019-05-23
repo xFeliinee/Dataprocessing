@@ -26,12 +26,10 @@ d3v5.json("HPI_data.json").then(function(data) {
             highlightBorderWidth: 3,
             // doet iets
             popupTemplate: function(geography, d) {
-                if (data[geography.properties.name]) {
-                    return "<b>Land: </b>" + geography.properties.name +
-                           "<br/>" + "<b>HPI-Rank: </b>" +
-                           data[geography.properties.name]["HPIRank"] +
-                           "<br/>" + "<b>HPI: </b>" +
-                           data[geography.properties.name]["Happy Planet Index"];
+                if (d) {
+                    return "<b>Land: </b>" + d["Country"] + "<br/>" +
+                           "<b>HPI-Rank: </b>" + d["HPIRank"] + "<br/>" +
+                           "<b>HPI: </b>" + d["Happy Planet Index"];
                 } else {
                     return "<b>Land: </b>" + geography.properties.name
                 }
