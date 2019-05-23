@@ -65,14 +65,65 @@ function barChart(dataset){
     var barWidth = (w / dataset.length) - barPadding;
 
     // Getting DOM element
-    var bars = d3.select("svg");
+    var bars = d3v5.select(".barchart")
 
     // yScale
+    var yScale = d3v5.scaleLinear()
+                    .domain([0, 100])
+                    // .range([h + margin.top, 0])
+                    .range([h, 0]);
+    var xScale = d3v5.scaleLinear()
+                        .domain([0,100])
+                        .range([0, w]);
+
+    bars.attr("width", w + margin.left + margin.right)
+        .attr("height", h + margin.top + margin.bottom)
+        .append("g")
+        .attr("class", "yAxis")
+        .attr("transform", "translate(" + margin.left + "," + margin.top +
+              ")")
+        .call(d3v5.axisLeft(yScale));
+
+
+    bars.append("g")
+        .attr("class", "xAxis")
+        .attr("transform", "translate(" + margin.left + "," +
+                            (h + margin.top) + ")")
+        .call(d3v5.axisBottom(xScale));
+
+    console.log("ikkomhier");
+
+    // x Axis werken niet?
+    // svg.append("g")
+    //     .attr("class", "xAxis")
+    //     .attr("transform", "translate(" + margin.left + "," +
+    //                         (h + margin.top) + ")")
+    //     .call(d3v5.axisBottom(xScale));
+
+    console.log("ik kom ook hier");
+    console.log(yScale(50));
+    console.log(xScale(50));
+
+    // bars.selectAll("rect")
+    //     .data(dataset)
+    //     .enter()
+    //     .append("rect")
+    //     .attr("x", 250)
+    //     .attr("y", 250)
+    //     .attr("height", 50)
+    //     .attr("width", 50);
+
     // xScale
 
     // Draw axis
     // Set titles to axis
     // Tooltip (werkt overigens ook niet, misschien vanwege gebruik d3v3 en v5?)
     // Create barchart (update op het moment dat er ergens anders op wordt geklikt)
-
+    var t=20,a=20,n=30,e=40,d=960-e-a,i=500-t-n
+    s = d3v5.select("body")
+            .append("svg")
+            .attr("width",d+e+a)
+            .attr("height",i+t+n)
+            .append("g")
+            .attr("transform","translate("+e+","+t+")");
 };
