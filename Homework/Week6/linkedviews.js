@@ -6,24 +6,19 @@
 
 // window.onload = function() {
 d3v5.json("HPI_data.json").then(function(data) {
-    // console.log(data);
-    // Object.keys(data).forEach(function(d)
-    //     console.log(data[d]["Happy Planet Index"]);
-    // })
-
-    // Ik wil de map groter, maar px aanpassen helpt niet?
     var map = new Datamap({
         element: document.getElementById('mapje'),
         data: data,
+        // Get a full worldmap in green
         projection: 'mercator',
         fills: {
-            defaultFill: 'rgba(213,255,116,1.0)' // Any hex, color name or rgb/rgba value
+            defaultFill: 'rgba(213,255,116,1.0)'
         },
+        // Hover in orange and show land and HPI rank
         geographyConfig: {
             highlightFillColor: '#FF8A28',
             highlightBorderColor: 'rgba(177, 168, 161, 1.0)',
             highlightBorderWidth: 2,
-            // doet iets
             popupTemplate: function(geography, d) {
                 if (d) {
                     return "<b>Land: </b>" + d["Country"] + "<br/>" +
@@ -32,12 +27,14 @@ d3v5.json("HPI_data.json").then(function(data) {
                 } else {
                     return "<b>Land: </b>" + geography.properties.name
                 }
+            // HPI moet hier nog uit, want ik wil de map op kleur op basis van HPI
             }
         },
         done: function(datamap) {
             datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography, d) {
                 if (data[geography.id]) {
-                    console.log(data[geography.id]);
+                    // console.log(data[geography.id]);
+                    barChart(data[geography.id]);
                     // roep hier de barchart aan met data
                 } else {
                     console.log("Doe niks");
@@ -47,8 +44,6 @@ d3v5.json("HPI_data.json").then(function(data) {
     });
 });
 
-
-// hoveren moet geven: HPI rank en HPI.
 // klik op dat land (of rank dus) moet een tweede plot maken
 // tweede plot: bar chart met life expectacy and wellbeing voor dat land
 
@@ -56,6 +51,12 @@ d3v5.json("HPI_data.json").then(function(data) {
  * Discription
  **/
 function barChart(dataset){
+    // Ik kan hier alle data plotten van dat land
+    console.log(dataset);
+    console.log(dataset["Average Life Expectancy"]);
+    console.log(dataset["Happy Planet Index"]);
+    console.log(dataset["Population"]);
+
     // Define height and width of the plot
     var margin = {top: 100, right: 0, bottom: 50, left: 50};
     var w = 1150;
