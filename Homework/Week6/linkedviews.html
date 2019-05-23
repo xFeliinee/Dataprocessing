@@ -12,33 +12,27 @@ This file ...
 
         <!-- Import D3 V5 -->
         <script src="https://d3js.org/d3.v5.min.js"></script>
+        <script src="d3-tip.js"></script>
         <script>
-        d3v5 = d3;
-        window.d3 = null;
+            d3v5 = d3;
+            window.d3 = null;
         </script>
-
         <!-- Import D3 V3 and TopoJSON -->
         <script src="https://d3js.org/d3.v3.min.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
-        <!-- TODO: IMPORT MAP HERE, eg.: <script src="datamaps.world.min.js"></script> -->
         <script src="datamaps.js"></script>
         <script>
-        d3v3 = d3;
-        window.d3 = null;
-
-        // Test if it worked
-        // console.log('v3', d3v3.version);
-        // console.log('v5', d3v5.version);
+            d3v3 = d3;
+            window.d3 = null;
         </script>
+        <script src="linkedviews.js"></script>
         <link rel="stylesheet" href="linkedviews.css">
-        <script src="d3-tip.js"></script>
     </head>
     <body>
         <h1>Homework week 6 and 7</h1>
         <h4>Data Processing<br>Feline Benavides&#44; 11035358</h4>
-        <div id="mapje" style="position: relative; width: 500px; height: 300px;"></div>
+        <div id="mapje" style="position: relative; width: 900px; height: 540px;"></div>
         <!-- <svg width="1000" height="600"></svg> -->
-        <script src="linkedviews.js"></script>
         <p>Hier komt een heel mooi plotje</p>
         <p>Source&#58; <a href="http://happyplanetindex.org/">Happy Planet Index</a></p>
     </body>

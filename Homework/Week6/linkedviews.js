@@ -26,14 +26,15 @@ d3v5.json("HPI_data.json").then(function(data) {
             highlightBorderWidth: 3,
             // doet iets
             popupTemplate: function(geography, d) {
-                // console.log(geography.properties.name);
-                // console.log(data[geography.properties.name]["Happy Planet Index"]);
-                // console.log(data);
-
-                // Misschien hier een functie schrijven die checkt of de waarde true is, anders alleen land teruggeeft?
-                return "<b>Land: </b>" + geography.properties.name + "<br/>" +
-                       "<b>HPI-Rank: </b>" + data[geography.properties.name]["HPIRank"] + "<br/>" +
-                       "<b>HPI: </b>" + data[geography.properties.name]["Happy Planet Index"];
+                if (data[geography.properties.name]) {
+                    return "<b>Land: </b>" + geography.properties.name +
+                           "<br/>" + "<b>HPI-Rank: </b>" +
+                           data[geography.properties.name]["HPIRank"] +
+                           "<br/>" + "<b>HPI: </b>" +
+                           data[geography.properties.name]["Happy Planet Index"];
+                } else {
+                    return "<b>Land: </b>" + geography.properties.name
+                }
             // Je wilt dat hij toch properties.name gaat onthouden en die in bar chart gooit bij on click
             },
         }
