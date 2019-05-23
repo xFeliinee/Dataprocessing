@@ -15,15 +15,14 @@ d3v5.json("HPI_data.json").then(function(data) {
     var map = new Datamap({
         element: document.getElementById('mapje'),
         data: data,
+        projection: 'mercator',
         fills: {
             defaultFill: 'rgba(213,255,116,1.0)' // Any hex, color name or rgb/rgba value
         },
         geographyConfig: {
-            hideAntarctica: false,
-            hideHawaiiAndAlaska : false,
             highlightFillColor: '#FF8A28',
-            highlightBorderColor: 'rgba(255, 255, 255, 1.0)',
-            highlightBorderWidth: 3,
+            highlightBorderColor: 'rgba(177, 168, 161, 1.0)',
+            highlightBorderWidth: 2,
             // doet iets
             popupTemplate: function(geography, d) {
                 if (d) {
@@ -33,8 +32,17 @@ d3v5.json("HPI_data.json").then(function(data) {
                 } else {
                     return "<b>Land: </b>" + geography.properties.name
                 }
-            // Je wilt dat hij toch properties.name gaat onthouden en die in bar chart gooit bij on click
-            },
+            }
+        },
+        done: function(datamap) {
+            datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography, d) {
+                if (data[geography.id]) {
+                    console.log(data[geography.id]);
+                    // roep hier de barchart aan met data
+                } else {
+                    console.log("Doe niks");
+                }
+            });
         }
     });
 });
