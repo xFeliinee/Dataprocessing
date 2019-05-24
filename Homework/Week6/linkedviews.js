@@ -51,29 +51,26 @@ d3v5.json("HPI_data.json").then(function(data) {
  * Discription
  **/
 function barChart(dataset){
-    // Ik kan hier alle data plotten van dat land
-    console.log(dataset);
-    console.log(dataset["Average Life Expectancy"]);
-    console.log(dataset["Happy Planet Index"]);
-    console.log(dataset["Population"]);
+    // console.log(dataset);
 
     // Define height and width of the plot
-    var margin = {top: 100, right: 0, bottom: 50, left: 50};
-    var w = 1150;
+    var margin = {top: 50, right: 10, bottom: 50, left: 50};
+    var w = 600;
     var h = 350;
-    var barPadding = 3;
-    var barWidth = (w / dataset.length) - barPadding;
+    var barPadding = 20;
+    var barWidth = (w / 3) - barPadding - margin.right;
 
     // Getting DOM element
     var bars = d3v5.select(".barchart")
 
-    // yScale
+    // Set scales for axis
     var yScale = d3v5.scaleLinear()
                     .domain([0, 100])
-                    // .range([h + margin.top, 0])
                     .range([h, 0]);
-    var xScale = d3v5.scaleLinear()
-                        .domain([0,100])
+    var list = ["Average Life Expectancy", /
+                "Inequality-adjusted Life Expectancy", "Happy Life Years"]
+    var xScale = d3v5.scaleBand()
+                        .domain(list)
                         .range([0, w]);
 
     bars.attr("width", w + margin.left + margin.right)
@@ -84,14 +81,11 @@ function barChart(dataset){
               ")")
         .call(d3v5.axisLeft(yScale));
 
-
     bars.append("g")
         .attr("class", "xAxis")
         .attr("transform", "translate(" + margin.left + "," +
                             (h + margin.top) + ")")
         .call(d3v5.axisBottom(xScale));
-
-    console.log("ikkomhier");
 
     // Set titles to axis
     bars.append("text")
@@ -100,48 +94,44 @@ function barChart(dataset){
         .attr("transform", "rotate(-90)")
         .attr("text-anchor", "middle")
         .style("font-size", "20px")
-        .text("YAS TITEL");
+        .text("Years");
+
     bars.append("text")
         .attr("x", w / 2 + margin.left)
         .attr("y", h + margin.top + ((4/5) * margin.bottom))
         .attr("text-anchor", "middle")
         .style("font-size", "20px")
-        .text("XAS TITEL");
+        .text("Variables from the Happy Planet Index");
+
     bars.append("text")
         .attr("x", w / 2 + margin.left)
-        .attr("y", margin.top / 3)
+        .attr("y", margin.top / 2)
         .attr("text-anchor", "middle")
         .style("font-size", "35px")
-        .text("GROTE TITEL");
+        .text("Happy Planet Index data from " + dataset["Country"]);
 
+    // Getting the data for .attr
     data = []
-    data.push(dataset["Average Life Expectancy"])
-    // console.log("ik kom ook hier");
-    // console.log(yScale(50));
-    // console.log(xScale(50));
-    // console.log(dataset);
-    // console.log(dataset.Country);
+    data.push(dataset["Average Life Expectancy"], dataset["Inequality-adjusted Life Expectancy"], dataset["Happy Life Years"])
+    // console.log(data);
 
+    // Getting the bars (deze werkt)
     bars.selectAll("rect")
         .data(data)
         .enter()
         .append("rect")
-        .attr("x", function(h, i) {
-            console.log("HALLOOOOO");
-            console.log(h);
-            console.log(i);
-            console.log(dataset["Country"]);
-            // return i * 50
+        .attr("x", function(d, i) {
+            return (i * (barWidth + barPadding)) + margin.left + barPadding;
         })
-        .attr("y", function(h, i){
-            console.log(h);
-            console.log(i);
-            // return yScale(50)
+        .attr("y", function(d){
+            return yScale(d) + margin.top;
         })
-        .attr("height", 50)
-        .attr("width", 50);
+        .attr("height", function(d){
+            return h - yScale(d);
+        })
+        .attr("width", barWidth)
+        .attr("fill", "orange")
 
-console.log("ik kom helemaal hier");
     // xScale
 
     // Draw axis
@@ -155,4 +145,7 @@ console.log("ik kom helemaal hier");
 //             .attr("height",i+t+n)
 //             .append("g")
 //             .attr("transform","translate("+e+","+t+")");
+
+// eenmaal deze functie en daarna update functie
+
 };
