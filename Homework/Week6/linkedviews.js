@@ -11,24 +11,22 @@
 
 // window.onload = function() {
 d3v5.json("HPI_data.json").then(function(data) {
-    console.log(data);
-
     // making averages for bar chart
     var sumExpectancy = 0;
     var sumHappyYears = 0;
     var sumInequality = 0;
-    var i = 0;
+
     Object.keys(data).forEach(function(d) {
         sumExpectancy += data[d]["Average Life Expectancy"]
         sumInequality += data[d]["Inequality-adjusted Life Expectancy"]
-        // console.log(data[d]["Inequality-adjusted Life Expectancy"]);
         sumHappyYears += data[d]["Happy Life Years"]
-    })
+    });
+
     var length = Object.keys(data).length;
-    console.log(Math.round((sumExpectancy / length) * 10 ) / 10);
-    // console.log(sumInequality);
-    console.log(Math.round((sumHappyYears / length) * 10 ) / 10);
-    console.log(Math.round((sumInequality / length) * 10 ) / 10);
+    var averages = [];
+    averages.push((Math.round((sumExpectancy / length) * 10 ) / 10),
+                  (Math.round((sumInequality / length) * 10 ) / 10),
+                  (Math.round((sumHappyYears / length) * 10 ) / 10));
 
     var map = new Datamap({
         element: document.getElementById('mapje'),
@@ -60,10 +58,10 @@ d3v5.json("HPI_data.json").then(function(data) {
                 if (data[geography.id]) {
                     if (document.getElementById("update")) {
                         console.log("update");
-                        updateBarchart(data[geography.id])
+                        updateBarchart(data[geography.id], averages)
                     } else {
                         console.log("make bar");
-                        barChart(data[geography.id]);
+                        barChart(data[geography.id], averages);
                     }
                 }
             });
@@ -76,7 +74,7 @@ d3v5.json("HPI_data.json").then(function(data) {
  * This functies makes the first barchart with data from the land that is
  * clicked on, on the world map if there is data from the Happy Planet Index.
  **/
-function barChart(dataset) {
+function barChart(dataset, averages) {
     // Define height and width of the plot
     var margin = {top: 50, right: 10, bottom: 50, left: 50};
     var w = 600;
@@ -148,11 +146,12 @@ function barChart(dataset) {
     var tip = d3v5.tip()
               .attr("class", "d3Tip")
               .offset([-10, 0])
-              .html(function(d) {
+              .html(function(d, i) {
                   return "<b>Exact number:</b> <span style='color:orange'>" +
                           d + "</span>" + "<br/>" + "<b>Inequality: </b>" +
                           "<span style='color:orange'>" +
-                          dataset["Inequality of Outcomes"] + "</span>";
+                          dataset["Inequality of Outcomes"] + "</span>" + "</br>"
+                          + averages[i];
                });
     bars.call(tip);
 
@@ -188,7 +187,7 @@ function barChart(dataset) {
  * This function updates the initial barChart with new data from the land
  * there is clicked on, if there is data from the Happy Planet Index.
  **/
-function updateBarchart(dataset){
+function updateBarchart(dataset, averages){
     // Getting the data needed for the bars
     data = [];
     data.push(dataset["Average Life Expectancy"],
