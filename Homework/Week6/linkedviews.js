@@ -4,6 +4,11 @@
  * This files...
 **/
 
+// To do's:
+// kleur van map op happy planet index
+// tooltip barchart met een div element? Kan dat uberhaupt meh
+// Update functie schrijven
+
 // window.onload = function() {
 d3v5.json("HPI_data.json").then(function(data) {
     var map = new Datamap({
@@ -49,11 +54,10 @@ d3v5.json("HPI_data.json").then(function(data) {
 
 
 /**
- * Discription
+ * This functies makes the first barchart with data from the land that is
+ * clicked on, on the world map if there is data from the Happy Planet Index.
  **/
-function barChart(dataset){
-    // console.log(dataset);
-
+function barChart(dataset) {
     // Define height and width of the plot
     var margin = {top: 50, right: 10, bottom: 50, left: 50};
     var w = 600;
@@ -142,8 +146,16 @@ function barChart(dataset){
 };
 
 /**
- * Discription
+ * This function updates the initial barChart with new data from the land
+ * there is clicked on, if there is data from the Happy Planet Index.
  **/
 function updateBarchart(dataset){
-    console.log("We gaan een update functie schrijven yay");
+    // Getting the data needed for the bars
+    data = [];
+    data.push(dataset["Average Life Expectancy"],
+              dataset["Inequality-adjusted Life Expectancy"],
+              dataset["Happy Life Years"]);
+    console.log(data);
+
+    // hier komt de update functie
 }
