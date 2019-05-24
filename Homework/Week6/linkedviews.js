@@ -11,6 +11,25 @@
 
 // window.onload = function() {
 d3v5.json("HPI_data.json").then(function(data) {
+    console.log(data);
+
+    // making averages for bar chart
+    var sumExpectancy = 0;
+    var sumHappyYears = 0;
+    var sumInequality = 0;
+    var i = 0;
+    Object.keys(data).forEach(function(d) {
+        sumExpectancy += data[d]["Average Life Expectancy"]
+        sumInequality += data[d]["Inequality-adjusted Life Expectancy"]
+        // console.log(data[d]["Inequality-adjusted Life Expectancy"]);
+        sumHappyYears += data[d]["Happy Life Years"]
+    })
+    var length = Object.keys(data).length;
+    console.log(Math.round((sumExpectancy / length) * 10 ) / 10);
+    // console.log(sumInequality);
+    console.log(Math.round((sumHappyYears / length) * 10 ) / 10);
+    console.log(Math.round((sumInequality / length) * 10 ) / 10);
+
     var map = new Datamap({
         element: document.getElementById('mapje'),
         data: data,
@@ -131,7 +150,9 @@ function barChart(dataset) {
               .offset([-10, 0])
               .html(function(d) {
                   return "<b>Exact number:</b> <span style='color:orange'>" +
-                          d + "</span>";
+                          d + "</span>" + "<br/>" + "<b>Inequality: </b>" +
+                          "<span style='color:orange'>" +
+                          dataset["Inequality of Outcomes"] + "</span>";
                });
     bars.call(tip);
 
