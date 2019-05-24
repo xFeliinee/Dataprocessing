@@ -6,7 +6,7 @@
 
 // To do's:
 // kleur van map op happy planet index
-// tooltip barchart met een div element? Kan dat uberhaupt meh
+// tooltip met andere data? Of wellicht average toevoegen?
 // Update functie schrijven
 
 // window.onload = function() {
@@ -125,6 +125,16 @@ function barChart(dataset) {
               dataset["Inequality-adjusted Life Expectancy"],
               dataset["Happy Life Years"]);
 
+    // Getting the tip
+    var tip = d3v5.tip()
+              .attr("class", "d3Tip")
+              .offset([-10, 0])
+              .html(function(d) {
+                  return "<b>Exact number:</b> <span style='color:orange'>" +
+                          d + "</span>";
+               });
+    bars.call(tip);
+
     // Getting the bars
     bars.selectAll("rect")
         .data(data)
@@ -140,9 +150,17 @@ function barChart(dataset) {
             return h - yScale(d);
         })
         .attr("width", barWidth)
-        .attr("fill", "orange");
-    // Tooltip (werkt overigens ook niet, misschien vanwege gebruik d3v3 en v5?)
-    // tooltip met divs?
+        .attr("fill", "orange")
+        .on("mouseover", tip.show)
+        .on("mouseenter", function(d){
+            d3v5.select(this)
+            .attr("fill", "#67DA08")
+        })
+        .on("mouseleave", tip.hide)
+        .on("mouseout", function(d){
+            d3v5.select(this)
+                .attr("fill", "orange")
+        });
 };
 
 /**
