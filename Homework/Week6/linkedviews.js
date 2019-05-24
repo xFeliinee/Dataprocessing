@@ -32,20 +32,21 @@ d3v5.json("HPI_data.json").then(function(data) {
         },
         done: function(datamap) {
             datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography, d) {
+                var update = 0;
                 if (data[geography.id]) {
-                    // console.log(data[geography.id]);
-                    barChart(data[geography.id]);
-                    // roep hier de barchart aan met data
-                } else {
-                    console.log("Doe niks");
+                    if (document.getElementById("update")) {
+                        console.log("update");
+                        updateBarchart(data[geography.id])
+                    } else {
+                        console.log("make bar");
+                        barChart(data[geography.id]);
+                    }
                 }
             });
         }
     });
 });
 
-// klik op dat land (of rank dus) moet een tweede plot maken
-// tweede plot: bar chart met life expectacy and wellbeing voor dat land
 
 /**
  * Discription
@@ -61,18 +62,22 @@ function barChart(dataset){
     var barWidth = (w / 3) - barPadding - margin.right;
 
     // Getting DOM element
-    var bars = d3v5.select(".barchart")
+    var bars = d3v5.select("body")
+                    .append("svg")
+                    .attr("id", "update");
 
     // Set scales for axis
     var yScale = d3v5.scaleLinear()
                     .domain([0, 100])
                     .range([h, 0]);
-    var list = ["Average Life Expectancy", /
-                "Inequality-adjusted Life Expectancy", "Happy Life Years"]
+
+    var list = ["Average Life Expectancy",
+                "Inequality-adjusted Life Expectancy", "Happy Life Years"];
     var xScale = d3v5.scaleBand()
                         .domain(list)
                         .range([0, w]);
 
+    // Getting the axis
     bars.attr("width", w + margin.left + margin.right)
         .attr("height", h + margin.top + margin.bottom)
         .append("g")
@@ -108,14 +113,15 @@ function barChart(dataset){
         .attr("y", margin.top / 2)
         .attr("text-anchor", "middle")
         .style("font-size", "35px")
-        .text("Happy Planet Index data from " + dataset["Country"]);
+        .text("Data from " + dataset["Country"]);
 
-    // Getting the data for .attr
-    data = []
-    data.push(dataset["Average Life Expectancy"], dataset["Inequality-adjusted Life Expectancy"], dataset["Happy Life Years"])
-    // console.log(data);
+    // Getting the data needed for the bars
+    data = [];
+    data.push(dataset["Average Life Expectancy"],
+              dataset["Inequality-adjusted Life Expectancy"],
+              dataset["Happy Life Years"]);
 
-    // Getting the bars (deze werkt)
+    // Getting the bars
     bars.selectAll("rect")
         .data(data)
         .enter()
@@ -130,22 +136,14 @@ function barChart(dataset){
             return h - yScale(d);
         })
         .attr("width", barWidth)
-        .attr("fill", "orange")
-
-    // xScale
-
-    // Draw axis
-    // Set titles to axis
+        .attr("fill", "orange");
     // Tooltip (werkt overigens ook niet, misschien vanwege gebruik d3v3 en v5?)
-    // Create barchart (update op het moment dat er ergens anders op wordt geklikt)
-//     var t=20,a=20,n=30,e=40,d=960-e-a,i=500-t-n
-//     s = d3v5.select("body")
-//             .append("svg")
-//             .attr("width",d+e+a)
-//             .attr("height",i+t+n)
-//             .append("g")
-//             .attr("transform","translate("+e+","+t+")");
-
-// eenmaal deze functie en daarna update functie
-
+    // tooltip met divs?
 };
+
+/**
+ * Discription
+ **/
+function updateBarchart(dataset){
+    console.log("We gaan een update functie schrijven yay");
+}
