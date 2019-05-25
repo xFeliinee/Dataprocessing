@@ -1,15 +1,12 @@
 /**
  * Name: Feline Benavides
  * Student number: 11035358
- * This files...
+ * This files creates a clickable world map. If there is data from the land that
+ * is clicked on, a barchart will be made and updated. The map is from
+ * https://datamaps.github.io/ (see also README)
 **/
 
-// To do's:
-// kleur van map op happy planet index
-// Update functie schrijven -> doet niet updaten maar verwijderen
-// werkt wel though
 
-// window.onload = function() {
 d3v5.json("HPI_data.json").then(function(data) {
     // making averages for barchart
     var sumExpectancy = 0;
@@ -53,16 +50,16 @@ d3v5.json("HPI_data.json").then(function(data) {
     var map = new Datamap({
         element: document.getElementById('map'),
         data: data,
-        projection: 'mercator',
+        projection: "mercator",
         fills: {
-            High: '#31a354',
-            Medium: '#addd8e',
-            Low: '#f7fcb9',
-            defaultFill: '#E4DBE4'
+            High: "#31a354",
+            Medium: "#addd8e",
+            Low: "#f7fcb9",
+            defaultFill: "#E4DBE4"
         },
         geographyConfig: {
-            highlightFillColor: 'orange',
-            highlightBorderColor: 'rgba(0, 0, 0, 0.4)',
+            highlightFillColor: "orange",
+            highlightBorderColor: "rgba(0, 0, 0, 0.4)",
             highlightBorderWidth: 2,
             popupTemplate: function(geography, d) {
                 // If the country exist in the data give ranking
@@ -89,15 +86,15 @@ d3v5.json("HPI_data.json").then(function(data) {
                         var color = "#addd8e";
                     } else {
                         var color = "#31a354";
-                    }
+                    };
 
-                    // Check if there is a barchart and update otherwise create
+                    // Check for a barchart and update it, otherwise create
                     if (document.getElementById("barchart")) {
                         updateBarchart(data[geography.id], averages, color)
                     } else {
                         barChart(data[geography.id], averages, color);
-                    }
-                }
+                    };
+                };
             });
         }
     });
@@ -111,7 +108,7 @@ d3v5.json("HPI_data.json").then(function(data) {
 
 /**
  * This functies makes the first barchart with data from the land that is
- * clicked on, on the world map if there is data from the Happy Planet Index.
+ * clicked on, if there is data from the Happy Planet Index.
  **/
 function barChart(dataset, averages, color) {
     // Define height and width of the plot
@@ -133,6 +130,7 @@ function barChart(dataset, averages, color) {
 
     var list = ["Average Life Expectancy",
                 "Inequality-adjusted Life Expectancy", "Happy Life Years"];
+
     var xScale = d3v5.scaleBand()
                         .domain(list)
                         .range([0, w]);
@@ -245,6 +243,7 @@ function updateBarchart(dataset, averages, color){
 
     var list = ["Average Life Expectancy",
                 "Inequality-adjusted Life Expectancy", "Happy Life Years"];
+                
     var xScale = d3v5.scaleBand()
                         .domain(list)
                         .range([0, w]);

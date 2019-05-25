@@ -1,7 +1,8 @@
 /**
  * Name: Feline Benavides
  * Student number: 11035358
- * This file ....
+ * This file holds all style changes for the tooltips, hover of the map and
+ * legend. Thanks to W3Schools (see README).
 **/
 
 /* Tooltip */
@@ -13,15 +14,17 @@
     border-radius: 5px;
 }
 
+/* Hovering over a country on the map */
 div.hoverinfo {
     font-size: 15px;
     background: rgba(255, 255, 255, 0.9);
 }
 
+/* Legend of the map */
 div.datamaps-legend {
     text-align: left;
     font-size: 12px;
     padding: 5px;
-    border-color: rgba(0, 0, 0, 0.7);
+    border-color: rgba(255, 0, 0, 0.7);
     border-radius: 10px;
 }

@@ -1,9 +1,15 @@
-// d3.tip
-// Copyright (c) 2013 Justin Palmer
-// ES6 / D3 v4 Adaption Copyright (c) 2016 Constantin Gavrilete
-// Removal of ES6 for D3 v4 Adaption Copyright (c) 2016 David Gotz
-//
-// Tooltips for d3.js SVG visualizations
+/**
+ * Name: Feline Benavides
+ * Student number: 11035358
+ * This file is needed for tooltips in d3v5.
+ *
+ * Thanks to (see also README):
+ * Copyright (c) 2013 Justin Palmer
+ * ES6 / D3 v4 Adaption Copyright (c) 2016 Constantin Gavrilete
+ * Removal of ES6 for D3 v4 Adaption Copyright (c) 2016 David Gotz
+ * Tooltips for d3.js SVG visualizations
+**/
+
 
 d3v5.functor = function functor(v) {
   return typeof v === "function" ? v : function() {
