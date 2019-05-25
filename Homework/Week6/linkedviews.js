@@ -6,12 +6,12 @@
 
 // To do's:
 // kleur van map op happy planet index
-// tooltip met andere data? Of wellicht average toevoegen?
-// Update functie schrijven
+// Update functie schrijven -> doet niet updaten maar verwijderen
+// werkt wel though
 
 // window.onload = function() {
 d3v5.json("HPI_data.json").then(function(data) {
-    // making averages for bar chart
+    // making averages for barchart
     var sumExpectancy = 0;
     var sumHappyYears = 0;
     var sumInequality = 0;
@@ -28,8 +28,9 @@ d3v5.json("HPI_data.json").then(function(data) {
                   (Math.round((sumInequality / length) * 10 ) / 10),
                   (Math.round((sumHappyYears / length) * 10 ) / 10));
 
+    // Making a map
     var map = new Datamap({
-        element: document.getElementById('mapje'),
+        element: document.getElementById('map'),
         data: data,
         // Get a full worldmap in green
         projection: 'mercator',
@@ -43,7 +44,7 @@ d3v5.json("HPI_data.json").then(function(data) {
             highlightBorderWidth: 2,
             popupTemplate: function(geography, d) {
                 if (d) {
-                    return "<b>Land: </b>" + d["Country"] + "<br/>" +
+                    return "<b>Country: </b>" + d["Country"] + "<br/>" +
                            "<b>HPI-Rank: </b>" + d["HPIRank"] + "<br/>" +
                            "<b>HPI: </b>" + d["Happy Planet Index"];
                 } else {
@@ -56,11 +57,9 @@ d3v5.json("HPI_data.json").then(function(data) {
             datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography, d) {
                 var update = 0;
                 if (data[geography.id]) {
-                    if (document.getElementById("update")) {
-                        console.log("update");
+                    if (document.getElementById("barchart")) {
                         updateBarchart(data[geography.id], averages)
                     } else {
-                        console.log("make bar");
                         barChart(data[geography.id], averages);
                     }
                 }
@@ -79,13 +78,13 @@ function barChart(dataset, averages) {
     var margin = {top: 50, right: 10, bottom: 50, left: 50};
     var w = 600;
     var h = 350;
-    var barPadding = 20;
+    var barPadding = 30;
     var barWidth = (w / 3) - barPadding - margin.right;
 
     // Getting DOM element
     var bars = d3v5.select("body")
                     .append("svg")
-                    .attr("id", "update");
+                    .attr("id", "barchart");
 
     // Set scales for axis
     var yScale = d3v5.scaleLinear()
@@ -130,6 +129,7 @@ function barChart(dataset, averages) {
         .text("Variables from the Happy Planet Index");
 
     bars.append("text")
+        .attr("id", "title")
         .attr("x", w / 2 + margin.left)
         .attr("y", margin.top / 2)
         .attr("text-anchor", "middle")
@@ -144,14 +144,15 @@ function barChart(dataset, averages) {
 
     // Getting the tip
     var tip = d3v5.tip()
-              .attr("class", "d3Tip")
+              .attr("id", "d3Tip")
               .offset([-10, 0])
               .html(function(d, i) {
                   return "<b>Exact number:</b> <span style='color:orange'>" +
-                          d + "</span>" + "<br/>" + "<b>Inequality: </b>" +
+                          d + "</span><br/><b>Average: </b>" +
+                         "<span style='color:orange'>" + averages[i] +
+                         "</span></br><b>Inequality: </b>" +
                           "<span style='color:orange'>" +
-                          dataset["Inequality of Outcomes"] + "</span>" + "</br>"
-                          + averages[i];
+                          dataset["Inequality of Outcomes"] + "</span>";
                });
     bars.call(tip);
 
@@ -183,17 +184,100 @@ function barChart(dataset, averages) {
         });
 };
 
+
 /**
  * This function updates the initial barChart with new data from the land
  * there is clicked on, if there is data from the Happy Planet Index.
  **/
 function updateBarchart(dataset, averages){
+    // Define height and width of the plot
+    var margin = {top: 50, right: 10, bottom: 50, left: 50};
+    var w = 600;
+    var h = 350;
+    var barPadding = 30;
+    var barWidth = (w / 3) - barPadding - margin.right;
+
+    // Set scales for axis
+    var yScale = d3v5.scaleLinear()
+                    .domain([0, 100])
+                    .range([h, 0]);
+
+    var list = ["Average Life Expectancy",
+                "Inequality-adjusted Life Expectancy", "Happy Life Years"];
+    var xScale = d3v5.scaleBand()
+                        .domain(list)
+                        .range([0, w]);
+
     // Getting the data needed for the bars
     data = [];
     data.push(dataset["Average Life Expectancy"],
               dataset["Inequality-adjusted Life Expectancy"],
               dataset["Happy Life Years"]);
-    console.log(data);
 
-    // hier komt de update functie
+    // Delete all data that needs to be changed
+    var deleteRect = d3v5.selectAll("rect")
+                            .remove()
+                            .exit();
+
+    var deleteTitle = d3v5.select("#title")
+                            .remove()
+                            .exit();
+
+    var deleteTip = d3v5.select("#d3Tip")
+                            .remove()
+                            .exit();
+
+    // Select barchart to add new data
+    var update = d3v5.select("#barchart")
+
+    // Add a new tip
+    var tip = d3v5.tip()
+              .attr("id", "d3Tip")
+              .offset([-10, 0])
+              .html(function(d, i) {
+                  return "<b>Exact number:</b> <span style='color:orange'>" +
+                          d + "</span><br/><b>Average: </b>" +
+                         "<span style='color:orange'>" + averages[i] +
+                         "</span></br><b>Inequality: </b>" +
+                          "<span style='color:orange'>" +
+                          dataset["Inequality of Outcomes"] + "</span>";
+               });
+    update.call(tip);
+
+    // Add a new title
+    update.append("text")
+            .attr("id", "title")
+            .attr("x", w / 2 + margin.left)
+            .attr("y", margin.top / 2)
+            .attr("text-anchor", "middle")
+            .style("font-size", "35px")
+            .text("Data from " + dataset["Country"]);
+
+    // Add new bars
+    update.selectAll("rect")
+            .data(data)
+            .enter()
+            .append("rect")
+            .attr("x", function(d, i) {
+                return (i * (barWidth + barPadding)) +
+                        margin.left + barPadding;
+            })
+            .attr("y", function(d){
+                return yScale(d) + margin.top;
+            })
+            .attr("height", function(d){
+                return h - yScale(d);
+            })
+            .attr("width", barWidth)
+            .attr("fill", "orange")
+            .on("mouseover", tip.show)
+            .on("mouseenter", function(d){
+                d3v5.select(this)
+                .attr("fill", "#67DA08")
+            })
+            .on("mouseleave", tip.hide)
+            .on("mouseout", function(d){
+                d3v5.select(this)
+                    .attr("fill", "orange")
+            });
 }
