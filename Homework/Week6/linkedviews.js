@@ -28,43 +28,83 @@ d3v5.json("HPI_data.json").then(function(data) {
                   (Math.round((sumInequality / length) * 10 ) / 10),
                   (Math.round((sumHappyYears / length) * 10 ) / 10));
 
+    // Getting the maximum of the Happy Planet Index
+    var fillKey = "fillKey";
+    var max = -Infinity;
+
+    Object.keys(data).forEach(function(d) {
+        if (data[d]["Happy Planet Index"] > max) {
+            max = data[d]["Happy Planet Index"]
+        }
+    });
+
+    // Making a colorscale based on the Happy Planet Index
+    var colorScale = d3v5.scaleThreshold()
+                        .domain([(1/3 * max), (2/3 * max), max])
+                        .range(["Low", "Medium", "High"]);
+
+    // Add the color to the .json file
+    Object.keys(data).forEach(function(d) {
+        var value = colorScale(data[d]["Happy Planet Index"])
+        data[d][fillKey] = value;
+    });
+
     // Making a map
     var map = new Datamap({
         element: document.getElementById('map'),
         data: data,
-        // Get a full worldmap in green
         projection: 'mercator',
         fills: {
-            defaultFill: 'rgba(213,255,116,1.0)'
+            High: '#31a354',
+            Medium: '#addd8e',
+            Low: '#f7fcb9',
+            defaultFill: '#E4DBE4'
         },
-        // Hover in orange and show land and HPI rank
         geographyConfig: {
-            highlightFillColor: '#FF8A28',
-            highlightBorderColor: 'rgba(177, 168, 161, 1.0)',
+            highlightFillColor: 'orange',
+            highlightBorderColor: 'rgba(0, 0, 0, 0.4)',
             highlightBorderWidth: 2,
             popupTemplate: function(geography, d) {
+                // If the country exist in the data give ranking
                 if (d) {
-                    return "<b>Country: </b>" + d["Country"] + "<br/>" +
-                           "<b>HPI-Rank: </b>" + d["HPIRank"] + "<br/>" +
-                           "<b>HPI: </b>" + d["Happy Planet Index"];
+                    return ["<div class='hoverinfo'><b>Country: </b>",
+                           d["Country"], "</br><b>Happy Planet Index-Rank: ",
+                           "</b>", d["HPIRank"], "</div>"].join('');
                 } else {
-                    return "<b>Land: </b>" + geography.properties.name
+                    return ["<div class='hoverinfo'><b>Country: </b>",
+                            geography.properties.name, "</br><i>No data",
+                            " available from the Happy Planet Index</i>",
+                            "</div>"].join('');
                 }
-            // HPI moet hier nog uit, want ik wil de map op kleur op basis van HPI
             }
         },
         done: function(datamap) {
             datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography, d) {
-                var update = 0;
+                // Check for data
                 if (data[geography.id]) {
-                    if (document.getElementById("barchart")) {
-                        updateBarchart(data[geography.id], averages)
+                    // Make a color library
+                    if (data[geography.id][fillKey] == "Low") {
+                        var color = "#f7fcb9";
+                    } else if (data[geography.id][fillKey] == "Medium"){
+                        var color = "#addd8e";
                     } else {
-                        barChart(data[geography.id], averages);
+                        var color = "#31a354";
+                    }
+
+                    // Check if there is a barchart and update otherwise create
+                    if (document.getElementById("barchart")) {
+                        updateBarchart(data[geography.id], averages, color)
+                    } else {
+                        barChart(data[geography.id], averages, color);
                     }
                 }
             });
         }
+    });
+    // Draw a legend for this map
+    map.legend({
+        legendTitle : "Range of Happy Planet Index ",
+        defaultFillName: "No data",
     });
 });
 
@@ -73,7 +113,7 @@ d3v5.json("HPI_data.json").then(function(data) {
  * This functies makes the first barchart with data from the land that is
  * clicked on, on the world map if there is data from the Happy Planet Index.
  **/
-function barChart(dataset, averages) {
+function barChart(dataset, averages, color) {
     // Define height and width of the plot
     var margin = {top: 50, right: 10, bottom: 50, left: 50};
     var w = 600;
@@ -171,16 +211,17 @@ function barChart(dataset, averages) {
             return h - yScale(d);
         })
         .attr("width", barWidth)
-        .attr("fill", "orange")
+        .attr("stroke", "#E4DBE4")
+        .attr("fill", color)
         .on("mouseover", tip.show)
         .on("mouseenter", function(d){
             d3v5.select(this)
-            .attr("fill", "#67DA08")
+            .attr("fill", "orange")
         })
         .on("mouseleave", tip.hide)
         .on("mouseout", function(d){
             d3v5.select(this)
-                .attr("fill", "orange")
+                .attr("fill", color)
         });
 };
 
@@ -189,7 +230,7 @@ function barChart(dataset, averages) {
  * This function updates the initial barChart with new data from the land
  * there is clicked on, if there is data from the Happy Planet Index.
  **/
-function updateBarchart(dataset, averages){
+function updateBarchart(dataset, averages, color){
     // Define height and width of the plot
     var margin = {top: 50, right: 10, bottom: 50, left: 50};
     var w = 600;
@@ -269,15 +310,16 @@ function updateBarchart(dataset, averages){
                 return h - yScale(d);
             })
             .attr("width", barWidth)
-            .attr("fill", "orange")
+            .attr("stroke", "#E4DBE4")
+            .attr("fill", color)
             .on("mouseover", tip.show)
             .on("mouseenter", function(d){
                 d3v5.select(this)
-                .attr("fill", "#67DA08")
+                .attr("fill", "orange")
             })
             .on("mouseleave", tip.hide)
             .on("mouseout", function(d){
                 d3v5.select(this)
-                    .attr("fill", "orange")
+                    .attr("fill", color)
             });
 }
