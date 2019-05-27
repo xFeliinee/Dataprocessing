@@ -22,6 +22,8 @@ div.hoverinfo {
 
 /* Legend of the map */
 div.datamaps-legend {
+    padding-left: 10px;
+    padding-right: 10px;
     text-align: left;
     font-size: 12px;
     border-radius: 10px;
@@ -43,5 +45,5 @@ div.datamaps-legend {
 }
 
 g.xAxis {
-    font-size: 12px;
+    font-size: 11.5px;
 }
