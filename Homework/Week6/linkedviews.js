@@ -25,19 +25,26 @@ d3v5.json("HPI_data.json").then(function(data) {
                   (Math.round((sumInequality / length) * 10 ) / 10),
                   (Math.round((sumHappyYears / length) * 10 ) / 10));
 
-    // Getting the maximum of the Happy Planet Index
+    // Getting the maximum and minimum of the Happy Planet Index
     var fillKey = "fillKey";
     var max = -Infinity;
+    var min = Infinity;
 
     Object.keys(data).forEach(function(d) {
         if (data[d]["Happy Planet Index"] > max) {
             max = data[d]["Happy Planet Index"]
         }
+        if (data[d]["Happy Planet Index"] < min) {
+            min = data[d]["Happy Planet Index"]
+        }
     });
+
+    var colorRange = max - min;
 
     // Making a colorscale based on the Happy Planet Index
     var colorScale = d3v5.scaleThreshold()
-                        .domain([(1/3 * max), (2/3 * max), max])
+                        .domain([(1/3 * colorRange + min),
+                                 (2/3 * colorRange + min), colorRange + min])
                         .range(["Low", "Medium", "High"]);
 
     // Add the color to the .json file
@@ -66,7 +73,9 @@ d3v5.json("HPI_data.json").then(function(data) {
                 if (d) {
                     return ["<div class='hoverinfo'><b>Country: </b>",
                            d["Country"], "</br><b>Happy Planet Index-Rank: ",
-                           "</b>", d["HPIRank"], "</div>"].join('');
+                           "</b>", d["HPIRank"], "</br><b>Happy Planet ",
+                           "Index-value: </b>", d["Happy Planet Index"],
+                           "</div>"].join('');
                 } else {
                     return ["<div class='hoverinfo'><b>Country: </b>",
                             geography.properties.name, "</br><i>No data",
@@ -111,6 +120,19 @@ d3v5.json("HPI_data.json").then(function(data) {
  * clicked on, if there is data from the Happy Planet Index.
  **/
 function barChart(dataset, averages, color) {
+    d3v5.select("body")
+        .append("div")
+        .attr("id", "barText")
+        .html(function(d) {
+          return ["This barchart shows various variables of the Happy Planet ",
+                  "Index in years. Inequality-adjusted Life Expectancy is ",
+                  "</br>", "adjusted to inequality of that land. If you hover ",
+                  "over the bar, you can see the percentage of inequality. In ",
+                  "the hover", "</br>", " you can also see the exact number ",
+                  "of years of that bar and the average of that ",
+                  "variable of all countries with available data."].join('');
+        });
+
     // Define height and width of the plot
     var margin = {top: 50, right: 10, bottom: 50, left: 50};
     var w = 600;
@@ -160,19 +182,19 @@ function barChart(dataset, averages, color) {
         .text("Years");
 
     bars.append("text")
+        .attr("id", "title")
         .attr("x", w / 2 + margin.left)
         .attr("y", h + margin.top + ((4/5) * margin.bottom))
         .attr("text-anchor", "middle")
         .style("font-size", "20px")
-        .text("Variables from the Happy Planet Index");
+        .text("Data from " + dataset["Country"]);
 
     bars.append("text")
-        .attr("id", "title")
         .attr("x", w / 2 + margin.left)
         .attr("y", margin.top / 2)
         .attr("text-anchor", "middle")
         .style("font-size", "35px")
-        .text("Data from " + dataset["Country"]);
+        .text("Variables from the Happy Planet Index");
 
     // Getting the data needed for the bars
     data = [];
@@ -185,11 +207,10 @@ function barChart(dataset, averages, color) {
               .attr("id", "d3Tip")
               .offset([-10, 0])
               .html(function(d, i) {
-                  return "<b>Exact number:</b> <span style='color:orange'>" +
-                          d + "</span><br/><b>Average: </b>" +
-                         "<span style='color:orange'>" + averages[i] +
-                         "</span></br><b>Inequality: </b>" +
-                          "<span style='color:orange'>" +
+                  return "Exact number: <span style='color:orange'>" + d +
+                         "</span><br/>Average: " + "<span style='color:orange'>"
+                         + averages[i] + "</span></br>Inequality: " +
+                         "<span style='color:orange'>" +
                           dataset["Inequality of Outcomes"] + "</span>";
                });
     bars.call(tip);
@@ -243,7 +264,7 @@ function updateBarchart(dataset, averages, color){
 
     var list = ["Average Life Expectancy",
                 "Inequality-adjusted Life Expectancy", "Happy Life Years"];
-                
+
     var xScale = d3v5.scaleBand()
                         .domain(list)
                         .range([0, w]);
@@ -275,11 +296,10 @@ function updateBarchart(dataset, averages, color){
               .attr("id", "d3Tip")
               .offset([-10, 0])
               .html(function(d, i) {
-                  return "<b>Exact number:</b> <span style='color:orange'>" +
-                          d + "</span><br/><b>Average: </b>" +
-                         "<span style='color:orange'>" + averages[i] +
-                         "</span></br><b>Inequality: </b>" +
-                          "<span style='color:orange'>" +
+                  return "Exact number: <span style='color:orange'>" + d +
+                         "</span><br/>Average: " + "<span style='color:orange'>"
+                         + averages[i] + "</span></br>Inequality: " +
+                         "<span style='color:orange'>" +
                           dataset["Inequality of Outcomes"] + "</span>";
                });
     update.call(tip);
@@ -288,9 +308,9 @@ function updateBarchart(dataset, averages, color){
     update.append("text")
             .attr("id", "title")
             .attr("x", w / 2 + margin.left)
-            .attr("y", margin.top / 2)
+            .attr("y", h + margin.top + ((4/5) * margin.bottom))
             .attr("text-anchor", "middle")
-            .style("font-size", "35px")
+            .style("font-size", "20px")
             .text("Data from " + dataset["Country"]);
 
     // Add new bars
