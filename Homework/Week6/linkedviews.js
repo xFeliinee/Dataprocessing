@@ -110,7 +110,7 @@ d3v5.json("HPI_data.json").then(function(data) {
         defaultFillName: "No data",
     })
     // Start the page with a barchart about the Netherlands
-    barChart(data["NLD"], averages, "#f7fcb9");
+    barChart(data["NLD"], averages, "#31a354");
 });
 
 
@@ -262,13 +262,6 @@ function updateBarchart(dataset, averages, color){
                     .domain([0, 100])
                     .range([h, 0]);
 
-    var list = ["Average Life Expectancy",
-                "Inequality-adjusted Life Expectancy", "Happy Life Years"];
-
-    var xScale = d3v5.scaleBand()
-                        .domain(list)
-                        .range([0, w]);
-
     // Getting the data needed for the bars
     data = [];
     data.push(dataset["Average Life Expectancy"],
@@ -276,20 +269,25 @@ function updateBarchart(dataset, averages, color){
               dataset["Happy Life Years"]);
 
     // Delete all data that needs to be changed
-    var deleteRect = d3v5.selectAll("rect")
-                            .remove()
-                            .exit();
-
     var deleteTitle = d3v5.select("#title")
-                            .remove()
-                            .exit();
-
-    var deleteTip = d3v5.select("#d3Tip")
                             .remove()
                             .exit();
 
     // Select barchart to add new data
     var update = d3v5.select("#barchart")
+
+    // Add a new title
+    update.append("text")
+            .attr("id", "title")
+            .attr("x", w / 2 + margin.left)
+            .attr("y", h + margin.top + ((4/5) * margin.bottom))
+            .attr("text-anchor", "middle")
+            .style("font-size", "20px")
+            .text("Data from " + dataset["Country"]);
+
+    // Select bars to append new data
+    var newBars = update.selectAll("rect")
+                            .data(data)
 
     // Add a new tip
     var tip = d3v5.tip()
@@ -302,44 +300,39 @@ function updateBarchart(dataset, averages, color){
                          "<span style='color:orange'>" +
                           dataset["Inequality of Outcomes"] + "</span>";
                });
-    update.call(tip);
-
-    // Add a new title
-    update.append("text")
-            .attr("id", "title")
-            .attr("x", w / 2 + margin.left)
-            .attr("y", h + margin.top + ((4/5) * margin.bottom))
-            .attr("text-anchor", "middle")
-            .style("font-size", "20px")
-            .text("Data from " + dataset["Country"]);
+    newBars.call(tip);
 
     // Add new bars
-    update.selectAll("rect")
-            .data(data)
+    newBars.attr("class", "update")
             .enter()
             .append("rect")
+            .attr("class", "enter")
             .attr("x", function(d, i) {
                 return (i * (barWidth + barPadding)) +
                         margin.left + barPadding;
             })
-            // .merge
-            .attr("y", function(d){
-                    return yScale(d) + margin.top;
-                })
-            .attr("height", function(d){
-                    return h - yScale(d);
-                })
             .attr("width", barWidth)
             .attr("stroke", "#E4DBE4")
-            .attr("fill", color)
-            .on("mouseover", tip.show)
-            .on("mouseenter", function(d){
-                d3v5.select(this)
-                .attr("fill", "orange")
-            })
-            .on("mouseleave", tip.hide)
-            .on("mouseout", function(d){
-                d3v5.select(this)
-                    .attr("fill", color)
-            });
+            .merge(newBars)
+                .attr("y", function(d){
+                        return yScale(d) + margin.top;
+                    })
+                .attr("height", function(d){
+                        return h - yScale(d);
+                    })
+                .attr("fill", color)
+                .on("mouseover", tip.show)
+                .on("mouseenter", function(d, i) {
+                    d3v5.select(this)
+                    .attr("fill", "orange")
+                })
+                .on("mouseleave", tip.hide)
+                .on("mouseout", function(d, i) {
+                    d3v5.select(this)
+                        .attr("fill", color)
+                });
+
+    newBars.exit()
+            .remove();
+
 }
