@@ -96,22 +96,21 @@ d3v5.json("HPI_data.json").then(function(data) {
                     } else {
                         var color = "#31a354";
                     };
-
-                    // Check for a barchart and update it, otherwise create
+                    // Check for a barchart and update it
                     if (document.getElementById("barchart")) {
                         updateBarchart(data[geography.id], averages, color)
-                    } else {
-                        barChart(data[geography.id], averages, color);
-                    };
+                    }
                 };
-            });
+            })
         }
     });
     // Draw a legend for this map
     map.legend({
         legendTitle : "Range of Happy Planet Index ",
         defaultFillName: "No data",
-    });
+    })
+    // Start the page with a barchart about the Netherlands
+    barChart(data["NLD"], averages, "#f7fcb9");
 });
 
 
@@ -120,6 +119,7 @@ d3v5.json("HPI_data.json").then(function(data) {
  * clicked on, if there is data from the Happy Planet Index.
  **/
 function barChart(dataset, averages, color) {
+    // Append text about the barchart
     d3v5.select("body")
         .append("div")
         .attr("id", "barText")
@@ -322,12 +322,13 @@ function updateBarchart(dataset, averages, color){
                 return (i * (barWidth + barPadding)) +
                         margin.left + barPadding;
             })
+            // .merge
             .attr("y", function(d){
-                return yScale(d) + margin.top;
-            })
+                    return yScale(d) + margin.top;
+                })
             .attr("height", function(d){
-                return h - yScale(d);
-            })
+                    return h - yScale(d);
+                })
             .attr("width", barWidth)
             .attr("stroke", "#E4DBE4")
             .attr("fill", color)
