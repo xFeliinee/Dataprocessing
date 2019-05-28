@@ -1,0 +1,22 @@
+Describe the design process and for each step all your design choices
+(in separate pdf document). You can simply use bullet points so that we can
+follow the steps that you have taken. Think about the specific design choices
+for each visualization, interaction design, the overall website design and also
+about the technical design (e.g. how do your visualizations communicate?)
+
+1. Ik wilde een wereldkaart laten zien met data van de Happy Planet Index. Ik
+    koos ervoor om kleur van de kaart op basis van HPI value te doen en in de
+    tooltip de HPI rank te laten zien.
+        - Uiteindelijk heb ik ervoor gekozen om ook de exacte waarde waarop
+            de kleur is gebaseerd ook te laten zien.
+2. Als tweede visualisatie wilde ik minimaal twee andere variabele laten zien
+    uit mijn data. Er waren drie variabelen die dezelfde y-as hadden (jaren).
+    Ik heb gekozen voor Life Expectancy, Inequality-adjusted Life Expectancy
+    en Happy Life Years. De tweede variabele is aangepast aan de hand van
+    Inequality van dat land, dus die wilde ik in de tooltip meegeven. Echter,
+    vond ik de barchart niet extreem goed afleesbaar, dus vandaar dat ik ervoor
+    heb gekozen om ook de exacte waarde mee te geven. Als laatste heb ik het
+    gemiddelde van de drie variabele meegegeven in de tooltip. Ik twijfelde
+    of ik er misschien 3 bars van wilde maken.
+3. Het leek me voor de website dus makkelijk om de wereldkaart bovenaan te
+    hebben en de barchart onderaan. 
